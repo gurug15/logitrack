@@ -37,4 +37,12 @@ public class AuthenticationController {
 	public ResponseEntity<User> addUser(@RequestBody UserDto userDto){
 		return new ResponseEntity<User>(userService.registerUser(userDto),HttpStatus.ACCEPTED);
 	}
+	
+	@PostMapping("/login")
+	public ResponseEntity<String> loginUser(@RequestBody UserDto userDto){
+		
+		String message = userService.verify(userDto);
+		
+		return new ResponseEntity<String>(message,HttpStatus.ACCEPTED);
+	}
 }

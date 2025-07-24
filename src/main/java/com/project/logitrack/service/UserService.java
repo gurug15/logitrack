@@ -12,4 +12,5 @@ import com.project.logitrack.dto.UserDto;
 public interface UserService {
 	public List<User> getAllUsers();
 	public User registerUser(UserDto userDto);
+	public String verify(UserDto userDto);
 }
