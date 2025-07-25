@@ -9,5 +9,5 @@ import com.project.logitrack.Entity.User;
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
 
-	public User findByName(String name);
+	public User findByEmail(String name);
 }
