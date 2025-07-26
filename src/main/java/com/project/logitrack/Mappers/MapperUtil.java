@@ -1,6 +1,7 @@
 package com.project.logitrack.Mappers;
 
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
@@ -25,8 +26,8 @@ public class MapperUtil {
 	        user.setPasswordHash(passwordEncoder.encode(dto.getPassword()));
 	        user.setPhone(dto.getPhone());
 	        user.setLogisticCenterId(null); // Will be assigned by admin later
-	        user.setCreatedAt(LocalDateTime.now());
-	        user.setUpdatedAt(LocalDateTime.now());
+	        user.setCreatedAt(OffsetDateTime.now());
+	        user.setUpdatedAt(OffsetDateTime.now());
 	        
 	        return user;
 	    }
@@ -45,8 +46,8 @@ public class MapperUtil {
 			user.setPhone(dto.getPhone());
 //			user.setRoleId();;
 			user.setLogisticCenterId(logisticCenter);
-			user.setCreatedAt(LocalDateTime.now());
-			user.setUpdatedAt(LocalDateTime.now());
+			user.setCreatedAt(OffsetDateTime.now());
+			user.setUpdatedAt(OffsetDateTime.now());
 			
 			return user;
 			}
@@ -84,7 +85,7 @@ public class MapperUtil {
 			existingUser.setPhone(dto.getPhone());
 			}
 			
-			existingUser.setUpdatedAt(LocalDateTime.now());	
+			existingUser.setUpdatedAt(OffsetDateTime.now());	
 			
 			return existingUser;
 			}

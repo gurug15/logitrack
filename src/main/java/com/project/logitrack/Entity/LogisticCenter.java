@@ -1,6 +1,7 @@
 package com.project.logitrack.Entity;
 
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -34,21 +35,21 @@ public class LogisticCenter {
 		private String contactPhone;
 		
 	 	@Column(name = "createdat")
-	    private LocalDateTime createdAt;
+	    private OffsetDateTime createdAt;
 	    
 	    @Column(name = "updatedat")
-	    private LocalDateTime updatedAt;
-	    
+	    private OffsetDateTime updatedAt;
+	
 	    
 	    @PrePersist
 	    protected void onCreate() {
-	        this.createdAt = LocalDateTime.now();
-	        this.updatedAt = LocalDateTime.now();
+	        this.createdAt = OffsetDateTime.now();
+	        this.updatedAt = OffsetDateTime.now();
 	    }
 
 	    @PreUpdate
 	    protected void onUpdate() {
-	        this.updatedAt = LocalDateTime.now();
+	        this.updatedAt = OffsetDateTime.now();
 	    }
 	
 }

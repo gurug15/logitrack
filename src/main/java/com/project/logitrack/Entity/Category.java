@@ -1,14 +1,17 @@
 package com.project.logitrack.Entity;
 
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.util.List;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
+//import jakarta.persistence.JoinColumn;
+//import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
@@ -32,22 +35,25 @@ public class Category {
 		@Column(name = "description")
 	    private String description;
 		
+		@OneToMany(mappedBy = "category")
+		private List<Item> items;
+		
 	 	@Column(name = "createdat")
-	    private LocalDateTime createdAt;
+	    private OffsetDateTime createdAt;
 	    
 	    @Column(name = "updatedat")
-	    private LocalDateTime updatedAt;
+	    private OffsetDateTime updatedAt;
 	
 	    
 	    @PrePersist
 	    protected void onCreate() {
-	        this.createdAt = LocalDateTime.now();
-	        this.updatedAt = LocalDateTime.now();
+	        this.createdAt = OffsetDateTime.now();
+	        this.updatedAt = OffsetDateTime.now();
 	    }
 
 	    @PreUpdate
 	    protected void onUpdate() {
-	        this.updatedAt = LocalDateTime.now();
+	        this.updatedAt = OffsetDateTime.now();
 	    }
 	    
 	

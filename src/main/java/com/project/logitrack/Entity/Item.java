@@ -2,7 +2,9 @@ package com.project.logitrack.Entity;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -43,29 +45,29 @@ public class Item {
 	    @Column(name = "category_id", insertable = false, updatable = false)
 	    private Integer categoryId;
 
-	    @Column(name = "created_at", updatable = false)
-	    private LocalDateTime createdAt;
-
-	    @Column(name = "updated_at")
-	    private LocalDateTime updatedAt;
-
 	    // Relationships
 	    @ManyToOne(fetch = FetchType.LAZY)
 	    @JoinColumn(name = "category_id")
 	    private Category category;
 
-//	    @OneToMany(mappedBy = "item", cascade = CascadeType.ALL, orphanRemoval = true)
+//	    @OneToMany(mappedBy = "item", cascade = CascadeType.DETACH, orphanRemoval = true)
 //	    private List<OrderItem> orderItems;
 
-	    // Set timestamps automatically
+	 	@Column(name = "createdat")
+	    private OffsetDateTime createdAt;
+	    
+	    @Column(name = "updatedat")
+	    private OffsetDateTime updatedAt;
+	
+	    
 	    @PrePersist
 	    protected void onCreate() {
-	        this.createdAt = LocalDateTime.now();
-	        this.updatedAt = LocalDateTime.now();
+	        this.createdAt = OffsetDateTime.now();
+	        this.updatedAt = OffsetDateTime.now();
 	    }
 
 	    @PreUpdate
 	    protected void onUpdate() {
-	        this.updatedAt = LocalDateTime.now();
+	        this.updatedAt = OffsetDateTime.now();
 	    }
 }

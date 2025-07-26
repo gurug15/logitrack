@@ -17,6 +17,7 @@ import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 import org.hibernate.annotations.ManyToAny;
 
@@ -54,21 +55,22 @@ public class User {
     @JoinColumn(name = "LogisticCenter_id")
     private LogisticCenter logisticCenterId;
     
-    @Column(name = "createdat")
-    private LocalDateTime createdAt;
+ 	@Column(name = "createdat")
+    private OffsetDateTime createdAt;
     
     @Column(name = "updatedat")
-    private LocalDateTime updatedAt;
+    private OffsetDateTime updatedAt;
+
     
     @PrePersist
     protected void onCreate() {
-        this.createdAt = LocalDateTime.now();
-        this.updatedAt = LocalDateTime.now();
+        this.createdAt = OffsetDateTime.now();
+        this.updatedAt = OffsetDateTime.now();
     }
 
     @PreUpdate
     protected void onUpdate() {
-        this.updatedAt = LocalDateTime.now();
+        this.updatedAt = OffsetDateTime.now();
     }
     
 }
