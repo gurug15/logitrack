@@ -29,7 +29,8 @@ public class Roles {
 	@Column(name="role")
 	private String role;
 	
-//	@OneToMany(mappedBy="role")
-//	private List<User> users;
+	@OneToMany(mappedBy="roleId")
+	private List<User> users;
+	
 	
 }
