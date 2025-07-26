@@ -4,12 +4,13 @@ import java.time.LocalDateTime;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import com.project.logitrack.Entity.Roles;
 import com.project.logitrack.Entity.User;
 import com.project.logitrack.dto.UserDto;
 
 public class MapperUtil {
 
-	 private static final Integer DEFAULT_USER_ROLE_ID = 3;
+//	 private static final Roles DEFAULT_USER_ROLE_ID = new Roles(1,"User",);
 	 
 	 
 	 public static User toUser(UserDto dto, BCryptPasswordEncoder passwordEncoder) {
@@ -22,7 +23,7 @@ public class MapperUtil {
 	        user.setEmail(dto.getEmail());
 	        user.setPasswordHash(passwordEncoder.encode(dto.getPassword()));
 	        user.setPhone(dto.getPhone());
-	        user.setRoleId(DEFAULT_USER_ROLE_ID);
+//	        user.setRoleId(DEFAULT_USER_ROLE_ID);
 	        user.setLogisticCenterId(null); // Will be assigned by admin later
 	        user.setCreatedAt(LocalDateTime.now());
 	        user.setUpdatedAt(LocalDateTime.now());
@@ -43,7 +44,7 @@ public class MapperUtil {
 			user.setEmail(dto.getEmail());
 			user.setPasswordHash(passwordEncoder.encode(dto.getPassword()));
 			user.setPhone(dto.getPhone());
-			user.setRoleId(roleId);
+//			user.setRoleId();;
 			user.setLogisticCenterId(logisticCenterId);
 			user.setCreatedAt(LocalDateTime.now());
 			user.setUpdatedAt(LocalDateTime.now());
