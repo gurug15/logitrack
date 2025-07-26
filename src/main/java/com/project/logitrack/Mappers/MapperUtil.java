@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import com.project.logitrack.Entity.LogisticCenter;
 import com.project.logitrack.Entity.Roles;
 import com.project.logitrack.Entity.User;
 import com.project.logitrack.dto.UserDto;
@@ -33,8 +34,7 @@ public class MapperUtil {
 	 
 	 
 	 
-	 public static User toUser(UserDto dto, BCryptPasswordEncoder passwordEncoder, 
-             Integer roleId, Integer logisticCenterId) {
+	 public static User toUser(UserDto dto, BCryptPasswordEncoder passwordEncoder, LogisticCenter logisticCenter) {
 				if (dto == null) {
 					return null;
 				}
@@ -45,7 +45,7 @@ public class MapperUtil {
 			user.setPasswordHash(passwordEncoder.encode(dto.getPassword()));
 			user.setPhone(dto.getPhone());
 //			user.setRoleId();;
-			user.setLogisticCenterId(logisticCenterId);
+			user.setLogisticCenterId(logisticCenter);
 			user.setCreatedAt(LocalDateTime.now());
 			user.setUpdatedAt(LocalDateTime.now());
 			

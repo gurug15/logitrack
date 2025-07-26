@@ -12,6 +12,8 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 
 import java.time.LocalDateTime;
@@ -45,13 +47,25 @@ public class User {
     @JoinColumn(name = "role_id") 
     private Roles roleId=new Roles(3,"User");
     
-    @Column(name = "logisticcenterid")
-    private Integer logisticCenterId;
+    @ManyToOne
+    @JoinColumn(name = "LogisticCenter_id")
+    private LogisticCenter logisticCenterId;
     
     @Column(name = "createdat")
     private LocalDateTime createdAt;
     
     @Column(name = "updatedat")
     private LocalDateTime updatedAt;
+    
+    @PrePersist
+    protected void onCreate() {
+        this.createdAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        this.updatedAt = LocalDateTime.now();
+    }
     
 }
