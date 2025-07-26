@@ -13,4 +13,6 @@ public interface UserService {
 	public List<User> getAllUsers();
 	public User registerUser(UserDto userDto);
 	public String verify(UserDto userDto);
+	public List<User> getUsersByRoleId(Integer roleId);
+	
 }

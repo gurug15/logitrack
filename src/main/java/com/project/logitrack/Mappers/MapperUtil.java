@@ -23,7 +23,6 @@ public class MapperUtil {
 	        user.setEmail(dto.getEmail());
 	        user.setPasswordHash(passwordEncoder.encode(dto.getPassword()));
 	        user.setPhone(dto.getPhone());
-//	        user.setRoleId(DEFAULT_USER_ROLE_ID);
 	        user.setLogisticCenterId(null); // Will be assigned by admin later
 	        user.setCreatedAt(LocalDateTime.now());
 	        user.setUpdatedAt(LocalDateTime.now());
