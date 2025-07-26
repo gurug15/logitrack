@@ -8,9 +8,15 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 import java.time.LocalDateTime;
+
+import org.hibernate.annotations.ManyToAny;
 
 @Entity
 @Table(name = "users")
@@ -35,8 +41,9 @@ public class User {
     @Column(name = "phone")
     private String phone;
     
-    @Column(name = "roleid")
-    private Integer roleId;
+    @ManyToOne
+    @JoinColumn(name = "role_id") 
+    private Roles roleId=new Roles(3,"User");
     
     @Column(name = "logisticcenterid")
     private Integer logisticCenterId;
@@ -47,13 +54,4 @@ public class User {
     @Column(name = "updatedat")
     private LocalDateTime updatedAt;
     
-    // Custom constructor for basic fields
-    public User(String name, String email, String passwordHash, Integer roleId) {
-        this.name = name;
-        this.email = email;
-        this.passwordHash = passwordHash;
-        this.roleId = roleId;
-        this.createdAt = LocalDateTime.now();
-        this.updatedAt = LocalDateTime.now();
-    }
 }
