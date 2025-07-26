@@ -18,6 +18,8 @@ import java.time.LocalDateTime;
 
 import org.hibernate.annotations.ManyToAny;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 @Entity
 @Table(name = "users")
 @Data
@@ -42,8 +44,9 @@ public class User {
     private String phone;
     
     @ManyToOne
-    @JoinColumn(name = "role_id") 
-    private Roles roleId=new Roles(3,"User");
+    @JoinColumn(name = "roleid") 
+    @JsonIgnoreProperties("users")
+    private Roles roleId;
     
     @Column(name = "logisticcenterid")
     private Integer logisticCenterId;
