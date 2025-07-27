@@ -52,7 +52,7 @@ public class User {
     private Roles roleId;
     
     @ManyToOne
-    @JoinColumn(name = "LogisticCenter_id")
+    @JoinColumn(name = "Logisticcenterid")
     private LogisticCenter logisticCenterId;
     
  	@Column(name = "createdat")

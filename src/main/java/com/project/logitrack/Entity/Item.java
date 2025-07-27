@@ -29,9 +29,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class Item {
 
-	 	@Id
-	    @GeneratedValue(strategy = GenerationType.IDENTITY)
-	    private Integer id;
+		@Id
+		@GeneratedValue(strategy = GenerationType.IDENTITY)
+		private Long id;
 
 	    private String name;
 
@@ -43,8 +43,6 @@ public class Item {
 
 	    private String dimensions;
 
-	    @Column(name = "category_id", insertable = false, updatable = false)
-	    private Integer categoryId;
 
 	    // Relationships
 	    @ManyToOne(fetch = FetchType.LAZY)

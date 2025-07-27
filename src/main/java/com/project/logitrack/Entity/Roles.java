@@ -27,7 +27,7 @@ public class Roles {
 	private Integer id;
 
 	@Column(name="role")
-	private String role;
+	private String roleName;
 	
 	@OneToMany(mappedBy="roleId")
 	private List<User> users;

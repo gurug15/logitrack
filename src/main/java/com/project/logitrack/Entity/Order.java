@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "orders") 
@@ -63,6 +64,12 @@ public class Order {
     @Column(nullable = false)
     private BigDecimal totalprice;
 
+    @OneToMany(mappedBy = "order" ,cascade = CascadeType.DETACH, orphanRemoval = true,fetch = FetchType.LAZY)
+    private List<OrderItem> orderItems;
+    	
+    
+    
+    
     @Column(name = "createdat", columnDefinition = "TIMESTAMP")
     private LocalDateTime createdAt = LocalDateTime.now();
 
