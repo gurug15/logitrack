@@ -45,4 +45,9 @@ public class TrackingHistory {
         this.createdAt = OffsetDateTime.now();
         this.timestamp = OffsetDateTime.now();
     }
+
+
+	public String getLocation() {
+		return "Didn't know which location we need to provide";
+	}
 }

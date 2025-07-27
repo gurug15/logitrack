@@ -10,6 +10,8 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 @Entity
 @Table(name = "orders") 
 @Data
@@ -65,6 +67,7 @@ public class Order {
     private BigDecimal totalprice;
 
     @OneToMany(mappedBy = "order" ,cascade = CascadeType.DETACH, orphanRemoval = true,fetch = FetchType.LAZY)
+    @JsonManagedReference
     private List<OrderItem> orderItems;
     	
     
