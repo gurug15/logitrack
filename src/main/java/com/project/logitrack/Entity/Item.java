@@ -3,6 +3,7 @@ package com.project.logitrack.Entity;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
+import java.util.List;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -50,8 +51,8 @@ public class Item {
 	    @JoinColumn(name = "category_id")
 	    private Category category;
 
-//	    @OneToMany(mappedBy = "item", cascade = CascadeType.DETACH, orphanRemoval = true)
-//	    private List<OrderItem> orderItems;
+	    @OneToMany(mappedBy = "item", cascade = CascadeType.DETACH, orphanRemoval = true)
+	    private List<OrderItem> orderItems;
 
 	 	@Column(name = "createdat")
 	    private OffsetDateTime createdAt;
