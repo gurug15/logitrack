@@ -4,6 +4,8 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;import org.springframework.context.annotation.Fallback;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.ForeignKey;
 import jakarta.persistence.GeneratedValue;
@@ -30,6 +32,7 @@ public class OrderItem {
 	
 	@ManyToOne(optional = false)
 	@JoinColumn(name = "orderId", foreignKey = @ForeignKey(name = "fk_orderitem_ordeId"))
+	@JsonBackReference  //added
 	private Order order;
 
 	@ManyToOne(optional = false)
@@ -39,6 +42,10 @@ public class OrderItem {
 	private Integer quantity;
 	
 	private BigDecimal unitPrice;
+
+	public String getProductName() {
+		return item.getName();    //we are going into item object and finding out the name 
+	}
 	
 		
 	

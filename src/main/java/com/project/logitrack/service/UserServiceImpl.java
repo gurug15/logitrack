@@ -1,8 +1,6 @@
 package com.project.logitrack.service;
 
-import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -11,7 +9,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.project.logitrack.Entity.Roles;
 import com.project.logitrack.Entity.User;
 import com.project.logitrack.Mappers.MapperUtil;
 import com.project.logitrack.dto.UserDto;
