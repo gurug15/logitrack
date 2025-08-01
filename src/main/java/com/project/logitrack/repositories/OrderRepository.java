@@ -23,6 +23,9 @@ public interface OrderRepository extends JpaRepository<Order,Long>{
     @Query("SELECT o FROM Order o WHERE o.postalcode = :postalcode")
     List<Order> findByPostalcode(@Param("postalcode") String postalcode);
     
+    @Query("SELECT o FROM Order o WHERE o.user.id = :userId ORDER BY o.orderdate DESC")
+    List<Order> findOrdersByUserIdOrderByOrderdateDesc(@Param("userId") Long userId);
+    
     @Query(value = """
     	    SELECT 
     	      COUNT(*) as total_orders,

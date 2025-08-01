@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.project.logitrack.Entity.Order;
+import com.project.logitrack.dto.OrderCountDto;
 
 public interface OrderService {
 	public List<Order> getUserOrders(Long userId);
@@ -14,4 +15,7 @@ public interface OrderService {
 	public Order createOrder(Order order);
 	public List<Order> getAllOrders();
 	
+	OrderCountDto getOrderStatsByUserId(Long userId);
+
+    List<Order> getRecentOrdersByUserId(Long userId);
 }

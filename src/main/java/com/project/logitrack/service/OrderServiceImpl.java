@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.project.logitrack.Entity.Order;
+import com.project.logitrack.dto.OrderCountDto;
 import com.project.logitrack.repositories.OrderRepository;
 
 @Service
@@ -52,5 +53,16 @@ public class OrderServiceImpl implements OrderService{
 	public List<Order> getAllOrders() {
 		return orderRepository.findAll();
 	}
+	
+	@Override
+    public OrderCountDto getOrderStatsByUserId(Long userId) {
+        return orderRepository.getOrderStatsByUserId(userId);
+    }
+
+    @Override
+    public List<Order> getRecentOrdersByUserId(Long userId) {
+        return orderRepository.findOrdersByUserIdOrderByOrderdateDesc(userId);
+    }
+    
 	
 }
