@@ -6,14 +6,19 @@ import java.util.stream.Collectors;
 
 import com.project.logitrack.Entity.Order;
 import com.project.logitrack.Entity.OrderItem;
+import com.project.logitrack.Entity.User;
 import com.project.logitrack.dto.OrderDto;
+import com.project.logitrack.dto.OrderFormDto;
 import com.project.logitrack.dto.OrderItemDto;
+import com.project.logitrack.dto.OrderItemFormDto;
 import com.project.logitrack.dto.OrderSummaryDto;
+import com.project.logitrack.dto.OrderViewDto;
 
 import lombok.Data;
 
 @Data
 public class OrderMapper {
+//		public static BigDecimal totalPrice;
 	    public static OrderSummaryDto toDtoSummary(Order order) {
 	        if (order == null) {
 	            return null;
@@ -58,5 +63,77 @@ public class OrderMapper {
 			if(orders==null) return Collections.emptyList();
 			return orders.stream().map(OrderMapper::toDtoOrder).collect(Collectors.toList());
 		}
+		
+		public static Order toOrderEntity(OrderFormDto dto, User user) {
+	        if (dto == null) return null;
+
+	        Order order = new Order();
+	        order.setUser(user); // Pass current authenticated user/entity if needed
+	        order.setCustomername(dto.getCustomerName());
+	        order.setCustomerphone(dto.getContact());
+	        order.setCustomeremail(dto.getEmail());
+	        order.setCustomeraddress(dto.getAddress());
+	        order.setCity(dto.getCity());
+	        order.setState(dto.getState());
+	        order.setPostalcode(dto.getPostalCode());
+	        order.setCountry(dto.getCountry() != null ? dto.getCountry() : "India");
+	        order.setStatus("pending");
+	        order.setOrderdate(java.time.LocalDate.now());
+	        order.setCreatedAt(java.time.LocalDateTime.now());
+	        order.setUpdatedAt(java.time.LocalDateTime.now());
+	        
+	        
+	        
+	        // Order items
+	        List<OrderItem> items = toOrderItemEntities(dto.getItems(), order);
+	        order.setOrderItems(items);
+
+	        return order;
+	    }
+
+	    public static List<OrderItem> toOrderItemEntities(List<OrderItemFormDto> dtos, Order order) {
+	        if (dtos == null) return java.util.Collections.emptyList();
+	        return dtos.stream().map(dto -> {
+	            OrderItem item = new OrderItem();
+	            item.setOrder(order);
+	            item.setProductName(dto.getProductName());
+	            item.setQuantity(dto.getQuantity());
+	            item.setUnitPrice(dto.getPrice());
+	            return item;
+	        }).collect(java.util.stream.Collectors.toList());
+	    }
+	    //from here view methods
+	    public static OrderViewDto toDtoOrderView(Order order) {
+	        if(order == null) return null;
+	        OrderViewDto dto = new OrderViewDto();
+	        dto.setId(order.getId());
+	        dto.setCustomername(order.getCustomername());
+	        dto.setCustomerphone(order.getCustomerphone());
+	        dto.setCustomeremail(order.getCustomeremail());
+	        dto.setCustomeraddress(order.getCustomeraddress());
+	        dto.setCity(order.getCity());
+	        dto.setState(order.getState());
+	        dto.setPostalcode(order.getPostalcode());
+	        dto.setCountry(order.getCountry());
+	        dto.setOrderdate(order.getOrderdate());
+	        dto.setStatus(order.getStatus());
+	        dto.setTotalprice(order.getTotalprice());
+
+	        if(order.getOrderItems() != null) {
+	            List<OrderItemDto> orderItemsDto = order.getOrderItems().stream()
+	                .map(item -> {
+	                   OrderItemDto itemDto = new OrderItemDto();
+	                   itemDto.setId(item.getId());
+	                   itemDto.setProductName(item.getProductName());
+	                   itemDto.setQuantity(item.getQuantity());
+	                   itemDto.setPrice(item.getUnitPrice());
+	                   return itemDto;
+	                }).collect(Collectors.toList());
+
+	            dto.setOrderItems(orderItemsDto);
+	        }
+
+	        return dto;
+	    }
 
 }

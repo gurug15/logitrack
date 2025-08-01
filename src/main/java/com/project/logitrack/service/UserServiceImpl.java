@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import com.project.logitrack.Entity.User;
 import com.project.logitrack.Mappers.UserMapper;
 import com.project.logitrack.dto.UserDto;
+import com.project.logitrack.exceptions.UserNotFoundException;
 import com.project.logitrack.repositories.UserRepository;
 
 
@@ -58,6 +59,12 @@ public class UserServiceImpl implements UserService {
 	    List<User> users = userRepo.getUserByRoleId(roleId);
         return users;
     }
+
+	@Override
+	public User getById(Long id) {
+		return userRepo.findById(id).orElseThrow(() -> new UserNotFoundException("User not found with id " + id));
+		
+	}
 
 
 	

@@ -46,6 +46,11 @@ public class OrderItem {
 	public String getProductName() {
 		return item.getName();    //we are going into item object and finding out the name 
 	}
+
+	public void setProductName(String productName) {
+		item.setName(productName);
+		
+	}
 	
 		
 	
