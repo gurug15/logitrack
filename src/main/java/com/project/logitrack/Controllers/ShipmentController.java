@@ -32,7 +32,7 @@ public class ShipmentController {
     }
 
     @GetMapping("/{trackingId}")  //working
-    public ResponseEntity<ShipmentDto> getShipmentByTrackingId(@PathVariable String trackingId) {
+    public ResponseEntity<ShipmentDto> getShipmentByTrackingId(@PathVariable("trackingId") String trackingId) {
         Optional<Shipment> shipmentOpt = shipmentService.getShipmentByTrackingId(trackingId);
         return shipmentOpt.map(ShipmentMapper::toDto).map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());

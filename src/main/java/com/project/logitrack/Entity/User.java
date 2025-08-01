@@ -66,6 +66,12 @@ public class User {
     protected void onCreate() {
         this.createdAt = OffsetDateTime.now();
         this.updatedAt = OffsetDateTime.now();
+        if (this.roleId == null) {
+            Roles defaultRole = new Roles();
+            defaultRole.setId(3); // Default to vendor role
+            this.roleId = defaultRole;
+        }
+        
     }
 
     @PreUpdate

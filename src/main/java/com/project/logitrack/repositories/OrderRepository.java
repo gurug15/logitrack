@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import com.project.logitrack.Entity.Order;
+import com.project.logitrack.dto.OrderCountDto;
 
 public interface OrderRepository extends JpaRepository<Order,Long>{
 	
@@ -21,6 +22,18 @@ public interface OrderRepository extends JpaRepository<Order,Long>{
     
     @Query("SELECT o FROM Order o WHERE o.postalcode = :postalcode")
     List<Order> findByPostalcode(@Param("postalcode") String postalcode);
+    
+    @Query(value = """
+    	    SELECT 
+    	      COUNT(*) as total_orders,
+    	      COUNT(*) FILTER (WHERE status = 'pending') as pending_orders,
+    	      COUNT(*) FILTER (WHERE status = 'processing') as processing_orders,
+    	      COUNT(*) FILTER (WHERE status = 'delivered') as delivered_orders
+    	    FROM orders
+    	    WHERE userid = :userId
+    	    """, nativeQuery = true)
+    OrderCountDto getOrderStatsByUserId(@Param("userId") Long userId);
+
 
     Order findById(long id);
 }

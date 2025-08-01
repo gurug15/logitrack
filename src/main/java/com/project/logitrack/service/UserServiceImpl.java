@@ -10,7 +10,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.project.logitrack.Entity.User;
-import com.project.logitrack.Mappers.MapperUtil;
+import com.project.logitrack.Mappers.UserMapper;
 import com.project.logitrack.dto.UserDto;
 import com.project.logitrack.repositories.UserRepository;
 
@@ -39,7 +39,7 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public User registerUser(UserDto userDto) {
 		
-		User user = MapperUtil.toUser(userDto, encoder);
+		User user = UserMapper.toUser(userDto, encoder);
 		user = userRepo.save(user);
 		return user;
 	}

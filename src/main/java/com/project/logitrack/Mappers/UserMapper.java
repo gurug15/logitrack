@@ -10,7 +10,7 @@ import com.project.logitrack.Entity.Roles;
 import com.project.logitrack.Entity.User;
 import com.project.logitrack.dto.UserDto;
 
-public class MapperUtil {
+public class UserMapper {
 
 //	 private static final Roles DEFAULT_USER_ROLE_ID = new Roles(1,"User",);
 	 

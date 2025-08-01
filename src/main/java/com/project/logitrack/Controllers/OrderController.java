@@ -43,7 +43,7 @@ public class OrderController {
     }
     
     @GetMapping("/{id}") //working
-    public ResponseEntity<OrderSummaryDto> getOrderById(@PathVariable Long id) {
+    public ResponseEntity<OrderSummaryDto> getOrderById(@PathVariable("id") Long id) {
         Optional<Order> orderOpt = orderService.getOrderByOrderId(id);
         return orderOpt
                .map(OrderMapper::toDtoSummary)   // using method reference
