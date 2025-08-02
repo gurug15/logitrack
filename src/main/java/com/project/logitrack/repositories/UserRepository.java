@@ -18,6 +18,17 @@ public interface UserRepository extends JpaRepository<User, Long> {
 	List<User> getUserByRoleId(@Param("roleId") Integer roleId);
 
 	
+	@Query("""
+			SELECT u FROM User u
+			WHERE (:query IS NULL OR :query = '' OR
+			    CAST(u.id AS string) = :query OR
+			    LOWER(u.name) LIKE LOWER(CONCAT('%', :query, '%')) OR
+			    LOWER(SUBSTRING(u.email, 1, POSITION('@' IN u.email) - 1)) LIKE LOWER(CONCAT('%', :query, '%')) OR
+			    LOWER(u.phone) LIKE LOWER(CONCAT('%', :query, '%')) OR
+			    LOWER(u.roleId.roleName) LIKE LOWER(CONCAT('%', :query, '%')))
+			""")
+			List<User> searchUsersGlobal(@Param("query") String query);
+
 	
 	public User findByEmail(String name);
 	

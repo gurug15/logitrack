@@ -48,7 +48,7 @@ public class AuthenticationController {
 		
 		return new ResponseEntity<String>(message,HttpStatus.ACCEPTED);
 	}
-	 @GetMapping("/users/{id}")
+	 @GetMapping("/users/role/{id}")
 	    public ResponseEntity<List<User>> getUsersByRole(@PathVariable Integer id) {
 	        List<User> users = userService.getUsersByRoleId(id);
 	        System.out.println(users);
