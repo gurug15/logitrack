@@ -38,7 +38,7 @@ public class OrderController {
 
 	@PostMapping
 	public ResponseEntity<Order> createOrder(@RequestBody OrderFormDto orderFormdto) {
-	    User user = userservice.getById((long)1); // get current user, according to your logic
+	    User user = userservice.getUserById((long)1); // get current user, according to your logic
 	    //we will get from JWT  //it will not throw exceptions 
 	    Order order = OrderMapper.toOrderEntity(orderFormdto, user);
 	    Order savedOrder = orderService.createOrder(order); // persist (including OrderItems)
