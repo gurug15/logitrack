@@ -50,6 +50,7 @@ public class OrderMapper {
 	        dto.setProductName(item.getProductName());
 	        dto.setQuantity(item.getQuantity());
 	        dto.setPrice(item.getUnitPrice());
+	        dto.setTotalPrice(item.getQuantity() * item.getUnitPrice().doubleValue());
 	        return dto;
 	    }
 
