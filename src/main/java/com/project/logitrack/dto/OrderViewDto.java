@@ -21,8 +21,12 @@ public class OrderViewDto {
     private String state;
     private String postalcode;
     private String country;
-    private LocalDate orderdate;
+    
     private String status;
     private BigDecimal totalprice;
     private List<OrderItemDto> orderItems; // include order item DTOs if applicable
+    
+    private LocalDate orderdate;
+    private LocalDate expectedDeliveryDate;;
+    private LocalDate deliveredDate;
 }

@@ -14,9 +14,5 @@ public class OrderItemDto {
     private BigDecimal price;
     
     private Double totalPrice;
-//    @PrePersist
-//    protected void onCreate() {
-//        totalPrice  = price.doubleValue() * quantity;
-//    }
     
 }
