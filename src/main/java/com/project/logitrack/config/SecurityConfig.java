@@ -10,6 +10,7 @@ import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -23,6 +24,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity
 public class SecurityConfig {
 	
 	
@@ -48,13 +50,10 @@ public class SecurityConfig {
                 .requestMatchers("/logistic-centers/**").hasAuthority("admin")
                 // Only admins can see the admin order dashboard
                 .requestMatchers("/orders/admin/**").hasAuthority("admin")
+                .requestMatchers("/shipments/my-center").hasAuthority("sub_admin")
 
-                // --- Sub-Admin-Only Endpoints ---
-                // Only users with 'sub_admin' authority can access their shipments
+                // This rule is still useful for other potential endpoints
                 .requestMatchers("/shipments/center/**").hasAuthority("sub_admin")
-
-                // --- General Authenticated Access ---
-                // Any other request must be from a logged-in user (any role)
                 .anyRequest().authenticated() 
             )	
             .sessionManagement(session -> 

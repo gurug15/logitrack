@@ -15,5 +15,5 @@ public interface ShipmentService {
     Optional<Shipment> updateShipmentStatus(Long shipmentId, String status);
 
     List<Shipment> getShipmentsByCurrentCenter(Long centerId);
-//    List<ShipmentDto> getShipmentsForCenter(UserPrinciple currentUser);
+    ShipmentDto updateShipmentStatusBySubAdmin(Long shipmentId, String newStatus, UserPrinciple currentUser);
 }
