@@ -39,5 +39,8 @@ public class UserPrinciple implements UserDetails {
 		// TODO Auto-generated method stub
 		return user.getEmail();
 	}
-
+	
+	 public User getUser() {
+	        return this.user;
+	    }
 }

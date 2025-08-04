@@ -33,24 +33,37 @@ public class SecurityConfig {
 	private JwtFilter jwtFilter; 
 	
 	@Bean
-	public SecurityFilterChain  securityFilterChain(HttpSecurity http) throws Exception{
+	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		
-		
-		http.cors(cust->{})
-		.csrf(customizer -> customizer.disable())
-			.authorizeHttpRequests(req->req
-//					.requestMatchers("/signup", "/login","*").permitAll()
-					.anyRequest().permitAll()
-//					.authenticated()
-					)	
-			.httpBasic(Customizer.withDefaults())
-			.sessionManagement(session->
-					session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-			.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+		http
+            .cors(Customizer.withDefaults()) // Use the bean for CORS config
+            .csrf(customizer -> customizer.disable()) // Disable CSRF for stateless API
+            .authorizeHttpRequests(req -> req
+                // --- Public Endpoints ---
+                // Allow anyone to access login and registration endpoints
+                .requestMatchers("/login","/signup").permitAll() // Assuming your login controller is here
+
+                // --- Admin-Only Endpoints ---
+                // Only users with 'admin' authority can manage logistic centers
+                .requestMatchers("/logistic-centers/**").hasAuthority("admin")
+                // Only admins can see the admin order dashboard
+                .requestMatchers("/orders/admin/**").hasAuthority("admin")
+
+                // --- Sub-Admin-Only Endpoints ---
+                // Only users with 'sub_admin' authority can access their shipments
+                .requestMatchers("/shipments/center/**").hasAuthority("sub_admin")
+
+                // --- General Authenticated Access ---
+                // Any other request must be from a logged-in user (any role)
+                .anyRequest().authenticated() 
+            )	
+            .sessionManagement(session -> 
+                session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // No sessions
+            .authenticationProvider(authProvider()) // Set your custom auth provider
+            .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class); // Add your JWT filter
 		
 		return http.build();
 	}
-	
 	@Bean
     public CorsConfigurationSource corsConfigurationSource() {
 		CorsConfiguration config = new CorsConfiguration();

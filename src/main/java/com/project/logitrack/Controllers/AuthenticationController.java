@@ -25,17 +25,6 @@ public class AuthenticationController {
 	
 	
 	
-	@GetMapping("/getOne")
-	public String getUser(@RequestParam("id")Long id) {
-		
-		return "user logged in";
-	}
-	
-	@GetMapping("/getall")
-	public List<User> getall(){
-		return userService.getAllUsers();
-	}
-	
 	@PostMapping("/signup")
 	public ResponseEntity<User> addUser(@RequestBody UserDto userDto){
 		return new ResponseEntity<User>(userService.registerUser(userDto),HttpStatus.ACCEPTED);

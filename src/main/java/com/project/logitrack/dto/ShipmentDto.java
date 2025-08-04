@@ -21,5 +21,6 @@ public class ShipmentDto {
     private Long sourceCenterId;
     private Long destCenterId;
     private Long currentCenterId;
+    private String CurrentCenterName;
     private List<TrackingHistoryDto> trackingHistory;
 }
