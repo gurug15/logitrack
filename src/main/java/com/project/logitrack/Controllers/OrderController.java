@@ -21,7 +21,6 @@ import com.project.logitrack.dto.OrderCountDto;
 import com.project.logitrack.dto.OrderDto;
 import com.project.logitrack.dto.OrderFormDto;
 import com.project.logitrack.dto.OrderItemDto;
-import com.project.logitrack.dto.OrderSummaryDto;
 import com.project.logitrack.dto.OrderViewDto;
 import com.project.logitrack.service.OrderService;
 import com.project.logitrack.service.UserService;
@@ -46,14 +45,22 @@ public class OrderController {
 	}
 
     @GetMapping
-    public ResponseEntity<List<OrderDto>> getOrders() {  //working fine : localhost:4000/orders
+    public ResponseEntity<List<OrderDto>> getOrders() {  
         List<Order> orders = orderService.getAllOrders(); // or apply filters as you have
         List<OrderDto> dtoList = OrderMapper.toOrderDtoList(orders);
         return ResponseEntity.ok(dtoList);
     }
     
+    @GetMapping("/admin")
+    public ResponseEntity<List<OrderViewDto>> getAdminOrders() {  //working fine : localhost:4000/orders
+        List<Order> orders = orderService.getAllOrders(); // or apply filters as you have
+        List<OrderViewDto> dtoList  = orders.stream().map(OrderMapper::toDtoAdminPage).toList();
+        return ResponseEntity.ok(dtoList);
+    }
+    
+    
     @GetMapping("/{id}") //working
-    public ResponseEntity<OrderSummaryDto> getOrderById(@PathVariable("id") Long id) {
+    public ResponseEntity<OrderViewDto> getOrderById(@PathVariable("id") Long id) {
         Optional<Order> orderOpt = orderService.getOrderByOrderId(id);
         return orderOpt
                .map(OrderMapper::toDtoSummary)   // using method reference
