@@ -4,6 +4,10 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import com.project.logitrack.Entity.Item;
 import com.project.logitrack.Entity.Order;
 import com.project.logitrack.Entity.OrderItem;
 import com.project.logitrack.Entity.User;
@@ -12,12 +16,14 @@ import com.project.logitrack.dto.OrderFormDto;
 import com.project.logitrack.dto.OrderItemDto;
 import com.project.logitrack.dto.OrderItemFormDto;
 import com.project.logitrack.dto.OrderViewDto;
+import com.project.logitrack.repositories.ItemRepository;
 
 import lombok.Data;
 
-@Data
+
+@Component //added for removing item.null
 public class OrderMapper {
-//		public static BigDecimal totalPrice;
+		
 	    public static OrderViewDto toDtoSummary(Order order) {
 	        if (order == null) {
 	            return null;
@@ -64,7 +70,7 @@ public class OrderMapper {
 			return orders.stream().map(OrderMapper::toDtoOrder).collect(Collectors.toList());
 		}
 		
-		public static Order toOrderEntity(OrderFormDto dto, User user) {
+		public static Order toOrderEntity(OrderFormDto dto, User user, ItemRepository itemRepository) {
 	        if (dto == null) return null;
 
 	        Order order = new Order();
@@ -85,23 +91,37 @@ public class OrderMapper {
 	        
 	        
 	        // Order items
-	        List<OrderItem> items = toOrderItemEntities(dto.getItems(), order);
+	        List<OrderItem> items = toOrderItemEntities(dto.getItems(), order,itemRepository);
 	        order.setOrderItems(items);
+	        
+	        java.math.BigDecimal totalPrice = items.stream()
+	                .map(item -> item.getUnitPrice().multiply(new java.math.BigDecimal(item.getQuantity())))
+	                .reduce(java.math.BigDecimal.ZERO, java.math.BigDecimal::add);
+	            order.setTotalprice(totalPrice);
 
 	        return order;
 	    }
 
-	    public static List<OrderItem> toOrderItemEntities(List<OrderItemFormDto> dtos, Order order) {
+	    public static List<OrderItem> toOrderItemEntities(List<OrderItemFormDto> dtos, Order order,ItemRepository itemRepository) {
 	        if (dtos == null) return java.util.Collections.emptyList();
+	        
 	        return dtos.stream().map(dto -> {
-	            OrderItem item = new OrderItem();
-	            item.setOrder(order);
-	            item.setProductName(dto.getProductName());
-	            item.setQuantity(dto.getQuantity());
-	            item.setUnitPrice(dto.getPrice());
-	            return item;
-	        }).collect(java.util.stream.Collectors.toList());
+	        	
+	        	Item productItem = itemRepository.findById(dto.getId())
+	                    .orElseThrow(() -> new jakarta.persistence.EntityNotFoundException(
+	                        "Item with name '" + dto.getProductName() + "Item with Id '" + dto.getId() + "' not found."
+	                    ));
+	        	
+	        	
+	            OrderItem orderitem = new OrderItem();
+	            orderitem.setOrder(order);
+	            orderitem.setItem(productItem); //error
+	            orderitem.setQuantity(dto.getQuantity());
+	            orderitem.setUnitPrice(dto.getPrice());
+	            return orderitem;
+	        }).collect(Collectors.toList());
 	    }
+	    
 	    //from here view methods
 	    public static OrderViewDto toDtoOrderView(Order order) {
 	        if(order == null) return null;

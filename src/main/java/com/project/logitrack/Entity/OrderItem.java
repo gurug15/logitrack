@@ -6,6 +6,7 @@ import java.time.LocalDateTime;import org.springframework.context.annotation.Fal
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ForeignKey;
 import jakarta.persistence.GeneratedValue;
@@ -39,12 +40,14 @@ public class OrderItem {
 	@JoinColumn(name = "itemId", foreignKey = @ForeignKey(name = "fk_orderitem_itemId"))
 	private Item item;
 	
+	@Column(nullable = false)
 	private Integer quantity;
 	
+	@Column(name = "unit_price", nullable = false)
 	private BigDecimal unitPrice;
 
 	public String getProductName() {
-		return item.getName();    //we are going into item object and finding out the name 
+		return item.getName();    //we are going into item object and finding out the name //oitem.item().getnm
 	}
 
 	public void setProductName(String productName) {

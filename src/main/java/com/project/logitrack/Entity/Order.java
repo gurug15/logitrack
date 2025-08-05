@@ -66,7 +66,7 @@ public class Order {
     @Column(nullable = false)
     private BigDecimal totalprice;
 
-    @OneToMany(mappedBy = "order" ,cascade = CascadeType.DETACH, orphanRemoval = true,fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @JsonManagedReference
     private List<OrderItem> orderItems;
     	
