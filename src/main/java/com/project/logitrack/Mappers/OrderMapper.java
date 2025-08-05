@@ -49,7 +49,7 @@ public class OrderMapper {
 	        dto.setProductName(item.getProductName());
 	        dto.setQuantity(item.getQuantity());
 	        dto.setPrice(item.getUnitPrice());
-	        dto.setTotalPrice(item.getQuantity() * item.getUnitPrice().doubleValue());
+	        dto.setTotalPrice(item.getQuantity() * item.getUnitPrice().doubleValue()); //here made some changes
 	        return dto;
 	    }
 
@@ -115,7 +115,11 @@ public class OrderMapper {
 	        dto.setState(order.getState());
 	        dto.setPostalcode(order.getPostalcode());
 	        dto.setCountry(order.getCountry());
+	        
+	        dto.setExpectedDeliveryDate(order.getExpectedDeliveryDate());//added to see the expected delivery date
+	        dto.setDeliveredDate(order.getDeliveredDate());  //added to see the delivery date
 	        dto.setOrderdate(order.getOrderdate());
+	        
 	        dto.setStatus(order.getStatus());
 	        dto.setTotalprice(order.getTotalprice());
 	        dto.setVendor(order.getUser().getName());
@@ -127,6 +131,7 @@ public class OrderMapper {
 	                   itemDto.setProductName(item.getProductName());
 	                   itemDto.setQuantity(item.getQuantity());
 	                   itemDto.setPrice(item.getUnitPrice());
+	                   itemDto.setTotalPrice(item.getQuantity() * item.getUnitPrice().doubleValue());
 	                   return itemDto;
 	                }).collect(Collectors.toList());
 

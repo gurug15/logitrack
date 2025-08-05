@@ -70,7 +70,11 @@ public class Order {
     @JsonManagedReference
     private List<OrderItem> orderItems;
     	
-    
+    @Column(name = "expecteddeliverydate")
+    private LocalDate expectedDeliveryDate;  //this is required to show the expected delivery date
+
+    @Column(name = "delivereddate")
+    private LocalDate deliveredDate; //this is required to show the expected delivery date
     
     
     @Column(name = "createdat", columnDefinition = "TIMESTAMP")
