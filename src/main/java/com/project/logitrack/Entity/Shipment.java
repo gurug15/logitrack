@@ -37,7 +37,7 @@ public class Shipment {
 
     // == RELATIONSHIPS ==
 
-    @ManyToOne(optional = false)
+    @OneToOne(optional = false)
     @JoinColumn(name = "order_id", nullable = false)
     private Order order;
 

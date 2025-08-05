@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.project.logitrack.Entity.LogisticCenter;
 import com.project.logitrack.Mappers.LogisticCenterMapper;
 import com.project.logitrack.dto.LogisticCenterDto;
 import com.project.logitrack.repositories.LogisticCenterRepository;
@@ -21,6 +22,13 @@ public class LogisticCenterServiceImpl implements LogisticCenterService {
 		return logisticCenterRepository.findAll().stream().map(LogisticCenterMapper::toDto).toList();
 	}
 	
+	
+	@Override
+    public LogisticCenterDto createCenter(LogisticCenterDto centerDto) {
+        LogisticCenter center = LogisticCenterMapper.toEntity(centerDto);
+        LogisticCenter savedCenter = logisticCenterRepository.save(center);
+        return LogisticCenterMapper.toDto(savedCenter);
+    }
 	
 	
 	

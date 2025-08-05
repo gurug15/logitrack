@@ -10,6 +10,7 @@ import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -23,6 +24,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity
 public class SecurityConfig {
 	
 	
@@ -33,24 +35,34 @@ public class SecurityConfig {
 	private JwtFilter jwtFilter; 
 	
 	@Bean
-	public SecurityFilterChain  securityFilterChain(HttpSecurity http) throws Exception{
+	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		
-		
-		http.cors(cust->{})
-		.csrf(customizer -> customizer.disable())
-			.authorizeHttpRequests(req->req
-//					.requestMatchers("/signup", "/login","*").permitAll()
-					.anyRequest().permitAll()
-//					.authenticated()
-					)	
-			.httpBasic(Customizer.withDefaults())
-			.sessionManagement(session->
-					session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-			.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+		http
+            .cors(Customizer.withDefaults()) // Use the bean for CORS config
+            .csrf(customizer -> customizer.disable()) // Disable CSRF for stateless API
+            .authorizeHttpRequests(req -> req
+                // --- Public Endpoints ---
+                // Allow anyone to access login and registration endpoints
+                .requestMatchers("/login","/signup").permitAll() // Assuming your login controller is here
+
+                // --- Admin-Only Endpoints ---
+                // Only users with 'admin' authority can manage logistic centers
+                .requestMatchers("/logistic-centers/**").hasAuthority("admin")
+                // Only admins can see the admin order dashboard
+                .requestMatchers("/orders/admin/**").hasAuthority("admin")
+                .requestMatchers("/shipments/my-center").hasAuthority("sub_admin")
+
+                // This rule is still useful for other potential endpoints
+                .requestMatchers("/shipments/center/**").hasAuthority("sub_admin")
+                .anyRequest().authenticated() 
+            )	
+            .sessionManagement(session -> 
+                session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // No sessions
+            .authenticationProvider(authProvider()) // Set your custom auth provider
+            .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class); // Add your JWT filter
 		
 		return http.build();
 	}
-	
 	@Bean
     public CorsConfigurationSource corsConfigurationSource() {
 		CorsConfiguration config = new CorsConfiguration();

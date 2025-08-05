@@ -8,5 +8,5 @@ import com.project.logitrack.dto.LogisticCenterDto;
 public interface LogisticCenterService {
 	
 	public List<LogisticCenterDto> getallCenters();
-	
+	 LogisticCenterDto createCenter(LogisticCenterDto centerDto);
 }

@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -59,11 +60,13 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public String verify(UserDto userDto) {
-		Authentication authentication  = authManager.authenticate(new UsernamePasswordAuthenticationToken(userDto.getEmail(), userDto.getPassword()));
+        // This will now throw AuthenticationException on failure, which is what we want.
+		Authentication authentication = authManager.authenticate(
+            new UsernamePasswordAuthenticationToken(userDto.getEmail(), userDto.getPassword())
+        );
 		
-		if(authentication.isAuthenticated())
-			return jwtService.generateToken(userDto.getEmail());
-		return "Failure";
+		UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+		return jwtService.generateToken(userDetails);
 	}
 
 	@Override

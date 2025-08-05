@@ -35,7 +35,11 @@ public class LogisticCenter {
     @NotBlank(message = "Address is required")
     @Size(max = 255, message = "Address must be less than 255 characters")
     private String address;
-
+    
+    @NotBlank(message = "Postal code is required")
+    @Size(min = 5, max = 10, message = "Postal code must be between 5 and 10 characters")
+    private String postalcode;
+    
     @NotBlank(message = "Contact phone is required")
     @Pattern(regexp = "^[0-9\\-\\+]{9,15}$", message = "Invalid contact phone format")
     private String contactPhone;

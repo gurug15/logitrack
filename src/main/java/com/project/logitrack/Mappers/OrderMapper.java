@@ -11,7 +11,6 @@ import com.project.logitrack.dto.OrderDto;
 import com.project.logitrack.dto.OrderFormDto;
 import com.project.logitrack.dto.OrderItemDto;
 import com.project.logitrack.dto.OrderItemFormDto;
-import com.project.logitrack.dto.OrderSummaryDto;
 import com.project.logitrack.dto.OrderViewDto;
 
 import lombok.Data;
@@ -19,11 +18,11 @@ import lombok.Data;
 @Data
 public class OrderMapper {
 //		public static BigDecimal totalPrice;
-	    public static OrderSummaryDto toDtoSummary(Order order) {
+	    public static OrderViewDto toDtoSummary(Order order) {
 	        if (order == null) {
 	            return null;
 	        }
-	        OrderSummaryDto dto = new OrderSummaryDto();
+	        OrderViewDto dto = new OrderViewDto();
 	        dto.setId(order.getId());
 	        dto.setCustomername(order.getCustomername());
 	        dto.setStatus(order.getStatus());
@@ -123,7 +122,7 @@ public class OrderMapper {
 	        
 	        dto.setStatus(order.getStatus());
 	        dto.setTotalprice(order.getTotalprice());
-
+	        dto.setVendor(order.getUser().getName());
 	        if(order.getOrderItems() != null) {
 	            List<OrderItemDto> orderItemsDto = order.getOrderItems().stream()
 	                .map(item -> {
@@ -141,5 +140,24 @@ public class OrderMapper {
 
 	        return dto;
 	    }
+	    
+	    
+	    public static OrderViewDto toDtoAdminPage(Order order) {
+	        if(order == null) return null;
+	        OrderViewDto dto = new OrderViewDto();
+	        dto.setId(order.getId());
+	        dto.setCustomername(order.getCustomername());
+	        dto.setCity(order.getCity());
+	        dto.setPostalcode(order.getPostalcode());
+	        dto.setOrderdate(order.getOrderdate());
+	        dto.setStatus(order.getStatus());
+	        dto.setTotalprice(order.getTotalprice());
+	        dto.setVendor(order.getUser().getName());
+	       
+	        return dto;
+	    }
+	    
+	    
+	    
 
 }

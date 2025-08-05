@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.project.logitrack.Entity.User;
 import com.project.logitrack.dto.UserDto;
+import com.project.logitrack.exceptions.UserNotFoundException;
 import com.project.logitrack.service.UserService;
 
 @RestController
@@ -25,17 +26,6 @@ public class AuthenticationController {
 	
 	
 	
-	@GetMapping("/getOne")
-	public String getUser(@RequestParam("id")Long id) {
-		
-		return "user logged in";
-	}
-	
-	@GetMapping("/getall")
-	public List<User> getall(){
-		return userService.getAllUsers();
-	}
-	
 	@PostMapping("/signup")
 	public ResponseEntity<User> addUser(@RequestBody UserDto userDto){
 		return new ResponseEntity<User>(userService.registerUser(userDto),HttpStatus.ACCEPTED);
@@ -43,10 +33,14 @@ public class AuthenticationController {
 	
 	@PostMapping("/login")
 	public ResponseEntity<String> loginUser(@RequestBody UserDto userDto){
-		
-		String message = userService.verify(userDto);
-		
-		return new ResponseEntity<String>(message,HttpStatus.ACCEPTED);
+		try {
+			String token = userService.verify(userDto);
+			// On success, return 200 OK with the token
+			return ResponseEntity.ok(token);
+		} catch (UserNotFoundException e) {
+			// On failure, return 401 Unauthorized with the error message
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+		}
 	}
 	 @GetMapping("/users/role/{id}")
 	    public ResponseEntity<List<User>> getUsersByRole(@PathVariable Integer id) {

@@ -2,6 +2,8 @@ package com.project.logitrack.dto;
 
 import java.util.List;
 
+import com.project.logitrack.Entity.User;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -19,7 +21,7 @@ public class OrderFormDto {
     private String state;
     private String postalCode;
     private String country;
-
+//    private User user;
     // List of products/items in the order
     private List<OrderItemFormDto> items;
 
