@@ -48,6 +48,9 @@ public class TrackingHistory {
 
 
 	public String getLocation() {
-		return "Didn't know which location we need to provide";
+		if (this.center != null) {
+	        return this.center.getName() + ", " + this.center.getCity();
+	    }
+	    return "Location information not available";
 	}
 }
