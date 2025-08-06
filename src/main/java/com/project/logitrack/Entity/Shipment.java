@@ -1,6 +1,12 @@
 package com.project.logitrack.Entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Future;
+import jakarta.validation.constraints.FutureOrPresent;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
@@ -13,48 +19,61 @@ import java.util.List;
 @AllArgsConstructor
 public class Shipment {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+	 @Id
+	    @GeneratedValue(strategy = GenerationType.IDENTITY)
+	    private Long id;
 
-    private String trackingId;
+	    @NotBlank(message = "Tracking ID is required")
+	    @Column(unique = true)
+	    private String trackingId;
 
-    private String status = "created";
+	    @NotBlank(message = "Status is required")
+	    private String status;
 
-    private BigDecimal weight;
+	    @NotNull(message = "Weight is required")
+	    @Positive(message = "Weight must be positive")
+	    private BigDecimal weight;
 
-    private String dimensions;
+	    @Size(max = 255, message = "Dimensions must be less than 255 characters")
+	    private String dimensions;
 
-    private OffsetDateTime expectedDelivery;
+	    @NotNull(message = "Expected delivery date is required")
+	    @Future(message = "Expected delivery date must be in the future")
+	    private OffsetDateTime expectedDelivery;
 
-    private OffsetDateTime actualDelivery;
+	    @FutureOrPresent(message = "Actual delivery date cannot be in the past")
+	    private OffsetDateTime actualDelivery;
 
-    @Column(name = "createdat")
-    private OffsetDateTime createdAt;
+	    @Column(name = "createdat", updatable = false)
+	    private OffsetDateTime createdAt;
 
-    @Column(name = "updatedat")
-    private OffsetDateTime updatedAt;
+	    @Column(name = "updatedat")
+	    private OffsetDateTime updatedAt;
 
-    // == RELATIONSHIPS ==
+	    // == RELATIONSHIPS ==
 
-    @OneToOne(optional = false)
-    @JoinColumn(name = "order_id", nullable = false)
-    private Order order;
+	    @OneToOne(optional = false)
+	    @JoinColumn(name = "order_id", nullable = false)
+	    @NotNull
+	    private Order order;
 
-    @ManyToOne
-    @JoinColumn(name = "source_center_id")
-    private LogisticCenter sourceCenter;
+	    @ManyToOne
+	    @JoinColumn(name = "source_center_id")
+	    @NotNull(message = "Source center is required")
+	    private LogisticCenter sourceCenter;
 
-    @ManyToOne
-    @JoinColumn(name = "dest_center_id")
-    private LogisticCenter destCenter;
+	    @ManyToOne
+	    @JoinColumn(name = "dest_center_id")
+	    @NotNull(message = "Destination center is required")
+	    private LogisticCenter destCenter;
 
-    @ManyToOne
-    @JoinColumn(name = "current_center_id")
-    private LogisticCenter currentCenter;
+	    @ManyToOne
+	    @JoinColumn(name = "current_center_id")
+	    @NotNull(message = "Current center is required")
+	    private LogisticCenter currentCenter;
 
-    @OneToMany(mappedBy = "shipment", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<TrackingHistory> trackingHistory;
+	    @OneToMany(mappedBy = "shipment", cascade = CascadeType.ALL, orphanRemoval = true)
+	    private List<TrackingHistory> trackingHistory;
 
     // == CALLBACKS ==
 

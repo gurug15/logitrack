@@ -53,7 +53,10 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public User registerUser(UserDto userDto) {
 		
-		User user = UserMapper.toUser(userDto, encoder);
+		Optional<LogisticCenter> logisticCenter = logisticCenterRepository.findById(userDto.getLogisticCenterId());
+		if(logisticCenter.isEmpty())
+			throw new UserNotFoundException("Invalid Center");
+		User user = UserMapper.toUser(userDto, encoder,logisticCenter.get());
 		user = userRepo.save(user);
 		return user;
 	}

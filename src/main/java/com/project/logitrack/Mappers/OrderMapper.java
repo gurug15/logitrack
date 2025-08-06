@@ -42,6 +42,7 @@ public class OrderMapper {
 	        dto.setId(order.getId());
 	        dto.setCustomername(order.getCustomername());
 	        dto.setOrderDate(order.getOrderdate());
+	        dto.setCity(order.getCity());
 	        dto.setStatus(order.getStatus());
 	        dto.setTotalprice(order.getTotalprice());
 	        // fill other fields as needed

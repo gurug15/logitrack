@@ -37,6 +37,7 @@ public interface OrderRepository extends JpaRepository<Order,Long>{
     	    """, nativeQuery = true)
     OrderCountDto getOrderStatsByUserId(@Param("userId") Long userId);
 
-
-    Order findById(long id);
+    @Query("SELECT o FROM Order o WHERE o.user.logisticCenterId.id = :centerId")
+    List<Order> findOrdersByUsersLogisticCenterId(@Param("centerId") Long centerId);
+    
 }

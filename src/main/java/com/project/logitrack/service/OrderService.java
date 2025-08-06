@@ -4,23 +4,25 @@ import java.util.List;
 import java.util.Optional;
 
 import com.project.logitrack.Entity.Order;
+<<<<<<< HEAD
 import com.project.logitrack.Entity.User;
+=======
+import com.project.logitrack.Entity.Shipment;
+import com.project.logitrack.Entity.UserPrinciple;
+>>>>>>> 9e1cdbd01709c8ff4f0ba20ff2605bfbbaf1f525
 import com.project.logitrack.dto.OrderCountDto;
 import com.project.logitrack.dto.OrderFormDto;
 
 public interface OrderService {
-	public List<Order> getUserOrders(Long userId);
-	public List<Order> getOrdersByStatus(String status);
-	public List<Order> getOrdersByCity(String city);
-	public List<Order> getOrdersByPostalcode(String Postalcode);
 	public Optional<Order> getOrderByOrderId(Long Id);
 	public Order createOrder(OrderFormDto orderFormDto, User user); //changed for creating the order
 	public Order saveOrder(Order order); 
     
 	public List<Order> getAllOrders();
-	
+	List<Order> getOrdersBySourceCenter(Long centerId);
 	OrderCountDto getOrderStatsByUserId(Long userId);
 
     List<Order> getRecentOrdersByUserId(Long userId);
-	
+	Shipment createShipmentFromOrder(Long orderId, UserPrinciple currentUser);
+
 }

@@ -8,12 +8,13 @@ import com.project.logitrack.Entity.User;
 import com.project.logitrack.dto.UpdateUserDto;
 import com.project.logitrack.dto.UserAdminDto;
 import com.project.logitrack.dto.UserDto;
+import com.project.logitrack.repositories.LogisticCenterRepository;
 
 
 //@Service
 public interface UserService {
 	public List<User> getAllUsers();
-	public User registerUser(UserDto userDto);
+	User registerUser(UserDto userDto);
 	public String verify(UserDto userDto);
 	public List<User> getUsersByRoleId(Integer roleId);
 	public User getUserById(Long id);
