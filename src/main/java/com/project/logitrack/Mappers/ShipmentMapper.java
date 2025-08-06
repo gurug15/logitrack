@@ -26,6 +26,8 @@ public class ShipmentMapper {
         dto.setSourceCenterId(shipment.getSourceCenter() != null ? shipment.getSourceCenter().getId() : null);
         dto.setDestCenterId(shipment.getDestCenter() != null ? shipment.getDestCenter().getId() : null);
         dto.setCurrentCenterId(shipment.getCurrentCenter() != null ? shipment.getCurrentCenter().getId() : null);
+
+        dto.setCurrentCenterName(shipment.getCurrentCenter() != null ? shipment.getCurrentCenter().getName() : null);
         dto.setTrackingHistory(toHistoryDtoList(shipment.getTrackingHistory()));
         return dto;
     }

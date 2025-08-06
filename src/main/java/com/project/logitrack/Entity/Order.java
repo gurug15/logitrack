@@ -83,6 +83,5 @@ public class Order {
     @Column(name = "updatedat", columnDefinition = "TIMESTAMP")
     private LocalDateTime updatedAt = LocalDateTime.now();
 
-    // Getters and setters omitted for brevity
 }
 
