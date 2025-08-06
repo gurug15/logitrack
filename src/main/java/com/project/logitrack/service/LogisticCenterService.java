@@ -7,6 +7,10 @@ import com.project.logitrack.dto.LogisticCenterDto;
 
 public interface LogisticCenterService {
 	
-	public List<LogisticCenterDto> getallCenters();
-	 LogisticCenterDto createCenter(LogisticCenterDto centerDto);
+	List<LogisticCenterDto> getallCenters();
+	
+	LogisticCenterDto createCenter(LogisticCenterDto centerDto);
+	
+	int getCenterFromPincode(String pincode);//it is added here
+	List<Integer> findRoute(int sourceCenterId, int destinationCenterId);//It is added here
 }

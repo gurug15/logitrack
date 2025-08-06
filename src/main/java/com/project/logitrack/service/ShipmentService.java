@@ -16,4 +16,7 @@ public interface ShipmentService {
 
     List<Shipment> getShipmentsByCurrentCenter(Long centerId);
     ShipmentDto updateShipmentStatusBySubAdmin(Long shipmentId, String newStatus, UserPrinciple currentUser);
+    
+//    void processNewShipment(Shipment newShipment);// added this new method
+    
 }
