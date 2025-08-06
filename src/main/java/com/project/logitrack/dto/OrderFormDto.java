@@ -25,7 +25,5 @@ public class OrderFormDto {
     // List of products/items in the order
     private List<OrderItemFormDto> items;
 
-    // For any order-level instruction
-    private String specialInstructions;
 }
 

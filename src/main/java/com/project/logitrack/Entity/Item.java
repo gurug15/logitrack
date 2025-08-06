@@ -33,6 +33,7 @@ public class Item {
 		@GeneratedValue(strategy = GenerationType.IDENTITY)
 		private Long id;
 
+//		@Column(name = "product_name", nullable = false)
 	    private String name;
 
 	    private String sku;
@@ -42,6 +43,9 @@ public class Item {
 	    private BigDecimal weight;
 
 	    private String dimensions;
+	    
+	    @Column(name = "base_price", precision = 10, scale = 2) // Good practice to define precision and scale for currency
+	    private BigDecimal basePrice;
 
 
 	    // Relationships
