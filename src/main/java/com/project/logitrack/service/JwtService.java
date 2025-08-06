@@ -33,6 +33,10 @@ public String generateToken(UserDetails userDetails) {
         if (userDetails instanceof UserPrinciple) {
             User user = ((UserPrinciple) userDetails).getUser(); 
 
+            
+            if(user.getName() != null) {
+                claims.put("name", user.getName());
+            }
             // Add the user's role as a claim
             if (user.getRoleId() != null) {
                 claims.put("role", user.getRoleId().getRoleName());

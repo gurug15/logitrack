@@ -91,18 +91,20 @@ public class OrderController {
 	     return ResponseEntity.ok(OrderMapper.toOrderItemDtoList(items));
 	 }
 	 
-	@GetMapping("/stats/{userId}")//JWT will replace userId
-	public ResponseEntity<OrderCountDto> getOrderStats(@PathVariable Long userId) {
-	    OrderCountDto stats = orderService.getOrderStatsByUserId(userId);
-	    return ResponseEntity.ok(stats);
-	}
-	
-	@GetMapping("/recent/{userId}")//JWT will replace userId
-	public ResponseEntity<List<OrderDto>> getRecentOrders(@PathVariable Long userId) {
-	    List<Order> orders = orderService.getRecentOrdersByUserId(userId);
-	    List<OrderDto> dtoList = OrderMapper.toOrderDtoList(orders);
-	    return ResponseEntity.ok(dtoList);
-	}
+	 @GetMapping("/stats") // Remove {userId} from the path
+		public ResponseEntity<OrderCountDto> getOrderStats(@AuthenticationPrincipal UserPrinciple currentUser) { // Remove @PathVariable
+			User user = currentUser.getUser();
+		    OrderCountDto stats = orderService.getOrderStatsByUserId(user.getId());
+		    return ResponseEntity.ok(stats);
+		}
+		
+		@GetMapping("/recent") // Remove {userId} from the path
+		public ResponseEntity<List<OrderDto>> getRecentOrders(@AuthenticationPrincipal UserPrinciple currentUser) { // Remove @PathVariable
+			User user = currentUser.getUser();
+		    List<Order> orders = orderService.getRecentOrdersByUserId(user.getId());
+		    List<OrderDto> dtoList = OrderMapper.toOrderDtoList(orders);
+		    return ResponseEntity.ok(dtoList);
+		}
 	
 	@GetMapping("/view/{orderId}")
     public ResponseEntity<OrderViewDto> getOrderByOrderId(@PathVariable Long orderId) {

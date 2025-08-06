@@ -17,7 +17,6 @@ import com.project.logitrack.Entity.User;
 import com.project.logitrack.Mappers.OrderMapper;
 
 import com.project.logitrack.Entity.Shipment;
-import com.project.logitrack.Entity.User;
 import com.project.logitrack.Entity.UserPrinciple;
 import com.project.logitrack.dto.OrderCountDto;
 import com.project.logitrack.dto.OrderFormDto;
