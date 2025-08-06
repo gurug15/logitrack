@@ -4,12 +4,12 @@ import java.util.List;
 import java.util.Optional;
 
 import com.project.logitrack.Entity.Order;
-<<<<<<< HEAD
+
 import com.project.logitrack.Entity.User;
-=======
+
 import com.project.logitrack.Entity.Shipment;
 import com.project.logitrack.Entity.UserPrinciple;
->>>>>>> 9e1cdbd01709c8ff4f0ba20ff2605bfbbaf1f525
+
 import com.project.logitrack.dto.OrderCountDto;
 import com.project.logitrack.dto.OrderFormDto;
 
