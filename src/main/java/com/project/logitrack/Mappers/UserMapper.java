@@ -2,6 +2,7 @@ package com.project.logitrack.Mappers;
 
 import java.time.OffsetDateTime;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import com.project.logitrack.Entity.LogisticCenter;
@@ -10,10 +11,14 @@ import com.project.logitrack.Entity.User;
 import com.project.logitrack.dto.UpdateUserDto;
 import com.project.logitrack.dto.UserAdminDto;
 import com.project.logitrack.dto.UserDto;
+import com.project.logitrack.dto.UserProfileDto;
 import com.project.logitrack.repositories.LogisticCenterRepository;
 import com.project.logitrack.repositories.RolesRepository;
 
 public class UserMapper {
+	
+	@Autowired
+	LogisticCenterRepository logisticCenterRepository;
 
 	public static User toUser(UserDto dto, BCryptPasswordEncoder passwordEncoder) {
 		if (dto == null) {
@@ -32,7 +37,29 @@ public class UserMapper {
 		return user;
 	}
 
+	 public static UserProfileDto toUserProfileDto(User user) {
+	        if (user == null) {
+	            return null;
+	        }
 
+	        UserProfileDto dto = new UserProfileDto();
+	        dto.setId(user.getId());
+	        dto.setName(user.getName());
+	        dto.setEmail(user.getEmail());
+	        dto.setPhone(user.getPhone());
+
+	        // Safely get the role name
+	        if (user.getRoleId() != null) {
+	            dto.setRoleName(user.getRoleId().getRoleName());
+	        }
+
+	        // Safely get the logistic center name
+	        if (user.getLogisticCenterId() != null) {
+	            dto.setLogisticCenterName(user.getLogisticCenterId().getName());
+	        }
+
+	        return dto;
+	    }
 
 	public static User toUser(UserDto dto, BCryptPasswordEncoder passwordEncoder, LogisticCenter logisticCenter) {
 		if (dto == null) {

@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -41,19 +42,14 @@ public class SecurityConfig {
             .cors(Customizer.withDefaults()) // Use the bean for CORS config
             .csrf(customizer -> customizer.disable()) // Disable CSRF for stateless API
             .authorizeHttpRequests(req -> req
-                // --- Public Endpoints ---
-                // Allow anyone to access login and registration endpoints
                 .requestMatchers("/login","/signup").permitAll() // Assuming your login controller is here
-
-                // --- Admin-Only Endpoints ---
-                // Only users with 'admin' authority can manage logistic centers
+                .requestMatchers(HttpMethod.GET, "/logistic-centers").permitAll()
                 .requestMatchers("/logistic-centers/**").hasAuthority("admin")
-                // Only admins can see the admin order dashboard
                 .requestMatchers("/orders/admin/**").hasAuthority("admin")
                 .requestMatchers("/shipments/my-center").hasAuthority("sub_admin")
-
-                // This rule is still useful for other potential endpoints
+                .requestMatchers("/api/subadmin/**").hasAuthority("sub_admin")
                 .requestMatchers("/shipments/center/**").hasAuthority("sub_admin")
+                .requestMatchers("/users/profile/me").authenticated()
                 .anyRequest().authenticated() 
             )	
             .sessionManagement(session -> 
