@@ -12,10 +12,16 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
 import com.project.logitrack.Entity.Order;
+
+import com.project.logitrack.Entity.User;
+import com.project.logitrack.Mappers.OrderMapper;
+
 import com.project.logitrack.Entity.Shipment;
 import com.project.logitrack.Entity.User;
 import com.project.logitrack.Entity.UserPrinciple;
 import com.project.logitrack.dto.OrderCountDto;
+import com.project.logitrack.dto.OrderFormDto;
+import com.project.logitrack.repositories.ItemRepository;
 import com.project.logitrack.repositories.OrderRepository;
 import com.project.logitrack.repositories.ShipmentRepository;
 import com.project.logitrack.repositories.TrackingHistoryRepository;
@@ -28,6 +34,12 @@ public class OrderServiceImpl implements OrderService{
 	@Autowired
 	private OrderRepository orderRepository;
 	
+
+	@Autowired
+	private ItemRepository itemRepository;  //removed from orderController
+	
+	
+
 	
 	@Autowired
     private ShipmentRepository shipmentRepository; // <-- Add this
@@ -36,13 +48,22 @@ public class OrderServiceImpl implements OrderService{
     private TrackingHistoryRepository trackingHistoryRepository; // <-- Add this
 
 	@Override
-	public Order createOrder(Order order) {
-        order.setCreatedAt(LocalDateTime.now());
-        order.setUpdatedAt(LocalDateTime.now());
-        // Set default order status if not set
-        if (order.getStatus() == null) {
-            order.setStatus("pending");
+	public Order createOrder(OrderFormDto orderFormDto, User user) {
+	    Order order = OrderMapper.toOrderEntity(orderFormDto, user, itemRepository);
+	    Order savedOrder = orderRepository.save(order);
+	    return savedOrder;
+	}
+	
+	@Override
+    public Order saveOrder(Order order) {
+        if (order.getId() == null) {
+            order.setCreatedAt(LocalDateTime.now());
+            if (order.getStatus() == null) {
+                order.setStatus("pending");
+            }
         }
+        order.setUpdatedAt(LocalDateTime.now());
+        // The MOST IMPORTANT STEP: Save the changes to the database
         return orderRepository.save(order);
     }
 	
@@ -52,7 +73,7 @@ public class OrderServiceImpl implements OrderService{
 	        return orderRepository.findOrdersByUsersLogisticCenterId(centerId);
 	    }
 	@Override
-	public Optional<Order> getOrderByOrderId(Long Id) {  //included optional here
+	public Optional<Order> getOrderByOrderId(Long Id) {  //included optional here  //this is important
 	    return orderRepository.findById(Id);
 	}
 

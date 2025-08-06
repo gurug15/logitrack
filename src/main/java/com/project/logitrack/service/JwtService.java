@@ -37,6 +37,9 @@ public String generateToken(UserDetails userDetails) {
             if (user.getRoleId() != null) {
                 claims.put("role", user.getRoleId().getRoleName());
             }
+            if (user.getId() != null) {
+                claims.put("id", user.getId());
+            }
 
             // Add the user's logistic center ID as a claim
             if (user.getLogisticCenterId() != null) {

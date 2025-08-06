@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,12 +17,14 @@ import org.springframework.web.bind.annotation.RestController;
 import com.project.logitrack.Entity.Order;
 import com.project.logitrack.Entity.OrderItem;
 import com.project.logitrack.Entity.User;
+import com.project.logitrack.Entity.UserPrinciple;
 import com.project.logitrack.Mappers.OrderMapper;
 import com.project.logitrack.dto.OrderCountDto;
 import com.project.logitrack.dto.OrderDto;
 import com.project.logitrack.dto.OrderFormDto;
 import com.project.logitrack.dto.OrderItemDto;
 import com.project.logitrack.dto.OrderViewDto;
+import com.project.logitrack.repositories.ItemRepository;
 import com.project.logitrack.service.OrderService;
 import com.project.logitrack.service.UserService;
 
@@ -32,15 +35,11 @@ public class OrderController {
 	@Autowired
     private OrderService orderService;
 	
-	@Autowired
-	private UserService userservice;
 
 	@PostMapping
-	public ResponseEntity<Order> createOrder(@RequestBody OrderFormDto orderFormdto) {
-	    User user = userservice.getUserById((long)1); // get current user, according to your logic
-	    //we will get from JWT  //it will not throw exceptions 
-	    Order order = OrderMapper.toOrderEntity(orderFormdto, user);
-	    Order savedOrder = orderService.createOrder(order); // persist (including OrderItems)
+	public ResponseEntity<Order> createOrder(@RequestBody OrderFormDto orderFormdto, @AuthenticationPrincipal UserPrinciple currentUser) {
+		User user = currentUser.getUser(); 
+	    Order savedOrder = orderService.createOrder(orderFormdto, user);
 	    return ResponseEntity.ok(savedOrder);
 	}
 
@@ -69,18 +68,17 @@ public class OrderController {
     }
 
     
-	    @PutMapping("/{id}")    //not tried
-	 // @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
-	 public ResponseEntity<OrderDto> updateOrderStatus(@PathVariable Long id, @RequestBody String status) {
-	     Optional<Order> orderOpt = orderService.getOrderByOrderId(id);
-	     if (orderOpt.isEmpty()) {
-	         return ResponseEntity.notFound().build();
-	     }
-	     Order order = orderOpt.get();
-	     order.setStatus(status);
-	     orderService.createOrder(order);  // persist update
-	     return ResponseEntity.ok(OrderMapper.toDtoOrder(order));  // return DTO here
-	 }
+    @PutMapping("/{id}")
+    public ResponseEntity<OrderDto> updateOrderStatus(@PathVariable Long id, @RequestBody String status) {
+        Optional<Order> orderOpt = orderService.getOrderByOrderId(id);
+        if (orderOpt.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        Order order = orderOpt.get();
+        order.setStatus(status);
+        Order savedOrder = orderService.saveOrder(order); 
+        return ResponseEntity.ok(OrderMapper.toDtoOrder(savedOrder));
+    }
 	
 	 @GetMapping("/{id}/items")  //working
 	 // @PreAuthorize("@orderSecurity.isOwnerOrStaff(authentication, #id)")
