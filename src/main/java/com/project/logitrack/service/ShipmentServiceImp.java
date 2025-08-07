@@ -8,12 +8,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
+import com.project.logitrack.Entity.LogisticCenter;
 import com.project.logitrack.Entity.Shipment;
 import com.project.logitrack.Entity.TrackingHistory;
 import com.project.logitrack.Entity.User;
 import com.project.logitrack.Entity.UserPrinciple;
 import com.project.logitrack.Mappers.ShipmentMapper;
 import com.project.logitrack.dto.ShipmentDto;
+import com.project.logitrack.dto.UpdateShipmentRequestDto;
+import com.project.logitrack.repositories.LogisticCenterRepository;
 import com.project.logitrack.repositories.ShipmentRepository;
 import com.project.logitrack.repositories.TrackingHistoryRepository;
 
@@ -26,6 +29,9 @@ public class ShipmentServiceImp implements ShipmentService{
 	
 	@Autowired
     private LogisticCenterService logisticCenterService; //for routing
+	
+	@Autowired
+	private LogisticCenterRepository logisticCenterRepository;
 	
 	@Autowired
 	private TrackingHistoryRepository trackingHistoryRepository;
@@ -59,39 +65,80 @@ public class ShipmentServiceImp implements ShipmentService{
         return shipmentRepository.findByCurrentCenterId(centerId);
     }
     
+  
+      
     @Override
-    @Transactional // Ensures this whole operation is a single, safe database transaction.
-    public ShipmentDto updateShipmentStatusBySubAdmin(Long shipmentId, String newStatus, UserPrinciple currentUser) {
-        // 1. Get the sub-admin's details from the security principal.
+    @Transactional
+    public ShipmentDto updateShipmentBySubAdmin(Long shipmentId, UpdateShipmentRequestDto request, UserPrinciple currentUser) {
         User subAdmin = currentUser.getUser();
         Long subAdminCenterId = subAdmin.getLogisticCenterId().getId();
 
-        // 2. Find the shipment by its ID. If it's not found, throw an error.
         Shipment shipment = shipmentRepository.findById(shipmentId)
                 .orElseThrow(() -> new RuntimeException("Shipment not found with ID: " + shipmentId));
 
-        // 3. !! THE CRITICAL SECURITY CHECK !!
-        // This ensures a sub-admin can only update packages at their OWN center.
+        // Security Check
         if (shipment.getCurrentCenter() == null || !shipment.getCurrentCenter().getId().equals(subAdminCenterId)) {
-            // If the shipment is not at their center, deny access.
             throw new AccessDeniedException("Access Denied: You can only update shipments at your own center.");
         }
 
-        // 4. Update the shipment's status.
-        shipment.setStatus(newStatus);
+        String requestedStatus = request.getStatus();
+        String notes;
 
-        // 5. Create a new tracking history record to create an audit trail of this change.
+        // --- NEW, SMARTER AUTOMATED LOGIC ---
+
+        // First, check if the shipment is already at its final destination
+        if (shipment.getCurrentCenter().getId().equals(shipment.getDestCenter().getId())) {
+            // If it's at the final center, the only valid next step is delivery.
+            if ("Delivered".equalsIgnoreCase(requestedStatus)) {
+                shipment.setStatus("Delivered");
+                shipment.setActualDelivery(OffsetDateTime.now());
+                notes = "Shipment has been successfully delivered.";
+            } else {
+                shipment.setStatus("Out for Delivery");
+                notes = "Shipment is now out for final delivery.";
+            }
+        }
+        // If the shipment is NOT at its final destination, and the user wants to dispatch it...
+        else if ("In Transit".equalsIgnoreCase(requestedStatus)) {
+            int sourceId = shipment.getSourceCenter().getId().intValue();
+            int destId = shipment.getDestCenter().getId().intValue();
+            
+            // 1. Get the route from your friend's service
+            List<Integer> route = logisticCenterService.findRoute(sourceId, destId);
+            int currentIndexInRoute = route.indexOf(subAdminCenterId.intValue());
+
+            // 2. Determine the next stop
+            if (currentIndexInRoute != -1 && currentIndexInRoute + 1 < route.size()) {
+                Long nextCenterId = (long) route.get(currentIndexInRoute + 1);
+                LogisticCenter nextCenter = logisticCenterRepository.findById(nextCenterId)
+                        .orElseThrow(() -> new RuntimeException("Next center in route not found: " + nextCenterId));
+                
+                // 3. Update the shipment's current location - THIS IS THE KEY FIX
+                shipment.setCurrentCenter(nextCenter);
+                notes = "Status: In Transit. Dispatched from " + subAdmin.getLogisticCenterId().getName() + " and forwarded to " + nextCenter.getName() + ".";
+                shipment.setStatus("In Transit");
+
+            } else {
+                // This case should rarely happen, but it's a safe fallback.
+                notes = "Status updated to '" + requestedStatus + "'. Could not determine next center in route.";
+                shipment.setStatus(requestedStatus);
+            }
+        } else {
+            // For any other manual status update (e.g., "Delayed")
+            shipment.setStatus(requestedStatus);
+            notes = "Status manually updated to '" + requestedStatus + "'";
+        }
+        
+        // Create the tracking history record
         TrackingHistory historyRecord = new TrackingHistory();
         historyRecord.setShipment(shipment);
-        historyRecord.setStatus(newStatus);
-        historyRecord.setCenter(shipment.getCurrentCenter());
+        historyRecord.setStatus(shipment.getStatus()); 
+        historyRecord.setNotes(notes);
+        historyRecord.setCenter(subAdmin.getLogisticCenterId()); 
         historyRecord.setUpdatedByUser(subAdmin);
-        historyRecord.setTimestamp(OffsetDateTime.now());
         
         trackingHistoryRepository.save(historyRecord);
-        
-        // Because of @Transactional, JPA automatically saves the changes to the 'shipment' object.
-        // We return a DTO to the controller for a clean API response.
+
         return ShipmentMapper.toDto(shipment);
     }
     

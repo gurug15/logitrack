@@ -46,17 +46,6 @@ public class OrderItem {
 	@Column(name = "unit_price", nullable = false)
 	private BigDecimal unitPrice;
 
-	public String getProductName() {
-		return item.getName();    //we are going into item object and finding out the name //oitem.item().getnm
-	}
-
-	public void setProductName(String productName) {
-		item.setName(productName);
-		
-	}
-	
-		
-	
 
 }
 

@@ -19,6 +19,7 @@ import com.project.logitrack.Entity.Shipment;
 import com.project.logitrack.Entity.UserPrinciple;
 import com.project.logitrack.Mappers.ShipmentMapper;
 import com.project.logitrack.dto.ShipmentDto;
+import com.project.logitrack.dto.UpdateShipmentRequestDto;
 import com.project.logitrack.dto.UpdateStatusDto;
 import com.project.logitrack.service.ShipmentService;
 
@@ -43,18 +44,14 @@ public class ShipmentController {
     }
 
     @PutMapping("/{shipmentId}/status")
-    @PreAuthorize("hasAuthority('sub_admin')") // This ensures only sub_admins can call this endpoint.
-    public ResponseEntity<ShipmentDto> updateStatusForSubAdmin(
+    @PreAuthorize("hasAuthority('sub_admin')")
+    public ResponseEntity<ShipmentDto> updateShipmentForSubAdmin(
             @PathVariable Long shipmentId,
-            @RequestBody UpdateStatusDto statusDto,
-            @AuthenticationPrincipal UserPrinciple currentUser) { // Injects the logged-in user's details
+            @RequestBody UpdateShipmentRequestDto request,
+            @AuthenticationPrincipal UserPrinciple currentUser) {
         
-        // Call the new, secure service method we created
-        ShipmentDto updatedShipment = shipmentService.updateShipmentStatusBySubAdmin(
-                shipmentId,
-                statusDto.getStatus(),
-                currentUser
-        );
+        // Note: The 'request' object now only needs to contain the 'status'.
+        ShipmentDto updatedShipment = shipmentService.updateShipmentBySubAdmin(shipmentId, request, currentUser);
         return ResponseEntity.ok(updatedShipment);
     }
     

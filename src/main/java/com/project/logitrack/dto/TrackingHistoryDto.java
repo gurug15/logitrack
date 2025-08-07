@@ -9,5 +9,6 @@ public class TrackingHistoryDto {
 	private Long id;
     private String status;
     private OffsetDateTime timestamp;
+    private String notes;
     private String location;
 }

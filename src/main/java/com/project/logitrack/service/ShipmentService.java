@@ -6,6 +6,7 @@ import java.util.Optional;
 import com.project.logitrack.Entity.Shipment;
 import com.project.logitrack.Entity.UserPrinciple;
 import com.project.logitrack.dto.ShipmentDto;
+import com.project.logitrack.dto.UpdateShipmentRequestDto;
 
 public interface ShipmentService {
 	Shipment createShipment(Shipment shipment);
@@ -15,7 +16,7 @@ public interface ShipmentService {
     Optional<Shipment> updateShipmentStatus(Long shipmentId, String status);
 
     List<Shipment> getShipmentsByCurrentCenter(Long centerId);
-    ShipmentDto updateShipmentStatusBySubAdmin(Long shipmentId, String newStatus, UserPrinciple currentUser);
+    ShipmentDto updateShipmentBySubAdmin(Long shipmentId, UpdateShipmentRequestDto request, UserPrinciple currentUser);
     
 //    void processNewShipment(Shipment newShipment);// added this new method
     

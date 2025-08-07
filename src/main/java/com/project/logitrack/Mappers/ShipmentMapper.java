@@ -1,18 +1,20 @@
 package com.project.logitrack.Mappers;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
-
 import com.project.logitrack.Entity.Shipment;
 import com.project.logitrack.Entity.TrackingHistory;
 import com.project.logitrack.dto.ShipmentDto;
 import com.project.logitrack.dto.TrackingHistoryDto;
 
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
+
 public class ShipmentMapper {
-	public static ShipmentDto toDto(Shipment shipment) {
+
+    public static ShipmentDto toDto(Shipment shipment) {
         if (shipment == null) return null;
         ShipmentDto dto = new ShipmentDto();
+        
         dto.setId(shipment.getId());
         dto.setTrackingId(shipment.getTrackingId());
         dto.setStatus(shipment.getStatus());
@@ -23,31 +25,50 @@ public class ShipmentMapper {
         dto.setCreatedAt(shipment.getCreatedAt());
         dto.setUpdatedAt(shipment.getUpdatedAt());
         dto.setOrderId(shipment.getOrder() != null ? shipment.getOrder().getId() : null);
-        dto.setSourceCenterId(shipment.getSourceCenter() != null ? shipment.getSourceCenter().getId() : null);
-        dto.setDestCenterId(shipment.getDestCenter() != null ? shipment.getDestCenter().getId() : null);
-        dto.setCurrentCenterId(shipment.getCurrentCenter() != null ? shipment.getCurrentCenter().getId() : null);
 
-        dto.setCurrentCenterName(shipment.getCurrentCenter() != null ? shipment.getCurrentCenter().getName() : null);
-        dto.setTrackingHistory(toHistoryDtoList(shipment.getTrackingHistory()));
+        if (shipment.getSourceCenter() != null) {
+            dto.setSourceCenterId(shipment.getSourceCenter().getId());
+            dto.setSourceCenterName(shipment.getSourceCenter().getName());
+        }
+        if (shipment.getDestCenter() != null) {
+            dto.setDestCenterId(shipment.getDestCenter().getId());
+            dto.setDestCenterName(shipment.getDestCenter().getName());
+        }
+        if (shipment.getCurrentCenter() != null) {
+            dto.setCurrentCenterId(shipment.getCurrentCenter().getId());
+            dto.setCurrentCenterName(shipment.getCurrentCenter().getName());
+        }
+
+        // This now correctly calls the helper method below
+        dto.setTrackingHistory(toTrackingHistoryDtoList(shipment.getTrackingHistory()));
+        
         return dto;
     }
-    public static List<TrackingHistoryDto> toHistoryDtoList(List<TrackingHistory> list) {
-        if (list == null) return null;
-        return list.stream()
-            .map(ShipmentMapper::toDto)
+
+    // This method now correctly calls the toTrackingHistoryDto helper
+    public static List<TrackingHistoryDto> toTrackingHistoryDtoList(List<TrackingHistory> historyList) {
+        if (historyList == null) return Collections.emptyList();
+        return historyList.stream()
+            .map(ShipmentMapper::toTrackingHistoryDto) // <-- FIX: Was calling the wrong method
             .collect(Collectors.toList());
     }
-    public static TrackingHistoryDto toDto(TrackingHistory h) {
-        if (h == null) return null;
+	
+    // This helper method now includes all the data needed for the UI
+    public static TrackingHistoryDto toTrackingHistoryDto(TrackingHistory history) {
+        if (history == null) return null;
         TrackingHistoryDto dto = new TrackingHistoryDto();
-        dto.setId(h.getId());
-        dto.setStatus(h.getStatus());
-        dto.setTimestamp(h.getTimestamp());
-        dto.setLocation(h.getLocation());
+        dto.setId(history.getId());
+        dto.setStatus(history.getStatus());
+        dto.setNotes(history.getNotes()); // <-- ADDED for UI
+        dto.setTimestamp(history.getTimestamp());
+        if (history.getCenter() != null) {
+            dto.setLocation(history.getCenter().getName()); // <-- ADDED for UI
+        }
         return dto;
     }
+
 	public static List<ShipmentDto> toDtoList(List<Shipment> shipmentsResult) {
-		if(shipmentsResult==null) return Collections.emptyList();
+		if(shipmentsResult == null) return Collections.emptyList();
 		return shipmentsResult.stream().map(ShipmentMapper::toDto).collect(Collectors.toList());
 	}
 }

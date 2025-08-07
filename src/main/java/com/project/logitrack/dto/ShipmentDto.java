@@ -20,6 +20,8 @@ public class ShipmentDto {
     private Long orderId;
     private Long sourceCenterId;
     private Long destCenterId;
+    private String sourceCenterName;
+    private String destCenterName;
     private Long currentCenterId;
     private String CurrentCenterName;
     private List<TrackingHistoryDto> trackingHistory;

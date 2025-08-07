@@ -18,8 +18,6 @@ public class TrackingHistory {
 
     private String status;
 
-    private String statusCode;
-
     private String notes;
 
     private OffsetDateTime timestamp;

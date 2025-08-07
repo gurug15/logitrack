@@ -53,7 +53,7 @@ public class OrderMapper {
 	        if (item == null) return null;
 	        OrderItemDto dto = new OrderItemDto();
 	        dto.setId(item.getId());
-	        dto.setProductName(item.getProductName());
+	        dto.setProductName(item.getItem().getName());
 	        dto.setQuantity(item.getQuantity());
 	        dto.setPrice(item.getUnitPrice());
 	        dto.setTotalPrice(item.getQuantity() * item.getUnitPrice().doubleValue()); //here made some changes
@@ -149,7 +149,7 @@ public class OrderMapper {
 	                .map(item -> {
 	                   OrderItemDto itemDto = new OrderItemDto();
 	                   itemDto.setId(item.getId());
-	                   itemDto.setProductName(item.getProductName());
+	                   itemDto.setProductName(item.getItem().getName());
 	                   itemDto.setQuantity(item.getQuantity());
 	                   itemDto.setPrice(item.getUnitPrice());
 	                   itemDto.setTotalPrice(item.getQuantity() * item.getUnitPrice().doubleValue());
