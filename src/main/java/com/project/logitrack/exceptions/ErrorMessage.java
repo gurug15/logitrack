@@ -1,6 +1,5 @@
 package com.project.logitrack.exceptions;
 
-import java.sql.Timestamp;
 import java.time.Instant;
 
 public class ErrorMessage {
