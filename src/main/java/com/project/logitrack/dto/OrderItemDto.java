@@ -8,6 +8,7 @@ import lombok.Data;
 
 @Data
 public class OrderItemDto {
+	//no validation needed
 	private Long id;
     private String productName;  // assuming OrderItem has such a field
     private Integer quantity;

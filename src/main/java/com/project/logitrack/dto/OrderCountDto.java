@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class OrderCountDto {
+	//no validation needed
 	private Long totalOrders;
 	private Long pendingOrders;
 	private Long  processingOrders;

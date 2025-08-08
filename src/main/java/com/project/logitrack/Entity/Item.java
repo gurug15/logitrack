@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.util.List;
 
+import io.micrometer.common.lang.NonNull;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -18,6 +19,8 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -33,11 +36,13 @@ public class Item {
 		@GeneratedValue(strategy = GenerationType.IDENTITY)
 		private Long id;
 
-//		@Column(name = "product_name", nullable = false)
-	    private String name;
+		@NotBlank(message = "Item Name is required")
+	    @Size(min = 3, max = 50, message = "Item Name must be 3-50 characters")
+		private String name;
 
 	    private String sku;
 
+	    @Size(max = 255, message = "Category description should be less than or equal to 255")
 	    private String description;
 
 	    private BigDecimal weight;
@@ -51,6 +56,7 @@ public class Item {
 	    // Relationships
 	    @ManyToOne(fetch = FetchType.LAZY)
 	    @JoinColumn(name = "category_id")
+	    @NotBlank(message = "Item should have Category")
 	    private Category category;
 
 	    @OneToMany(mappedBy = "item", cascade = CascadeType.DETACH, orphanRemoval = true)
