@@ -7,6 +7,7 @@ import lombok.Data;
 
 @Data
 public class OrderDto {
+	// no validation needed
 	private Long id;
     private String customername;
     private String status;

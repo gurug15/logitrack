@@ -20,24 +20,25 @@ public class LogisticCenter {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank(message = "Name is required")
+    @NotBlank(message = "Name for Logistic Center is required")
     @Size(max = 100, message = "Name must be less than 100 characters")
     private String name;
 
-    @NotBlank(message = "City is required")
+    @NotBlank(message = "City for logistic Center is required")
     @Size(max = 100, message = "City must be less than 100 characters")
     private String city;
 
-    @NotBlank(message = "State is required")
+    @NotBlank(message = "State for logistic Center is required")
     @Size(max = 100, message = "State must be less than 100 characters")
     private String state;
 
-    @NotBlank(message = "Address is required")
+    @NotBlank(message = "Address for logistic Center is required")
     @Size(max = 255, message = "Address must be less than 255 characters")
     private String address;
     
     @NotBlank(message = "Postal code is required")
-    @Size(min = 5, max = 10, message = "Postal code must be between 5 and 10 characters")
+    @Size(min = 6, max = 6, message = "Postal code must be exactly 6 digits")
+    @Pattern(regexp = "\\d{6}", message = "Postal code must contain only digits")
     private String postalcode;
     
     @NotBlank(message = "Contact phone is required")

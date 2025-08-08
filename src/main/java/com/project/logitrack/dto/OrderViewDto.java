@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class OrderViewDto {
+	//no validation needed
 	private Long id;
     private String customername;
     private String customerphone;

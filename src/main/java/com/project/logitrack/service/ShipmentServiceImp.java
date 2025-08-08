@@ -92,8 +92,10 @@ public class ShipmentServiceImp implements ShipmentService{
             if ("Delivered".equalsIgnoreCase(requestedStatus)) {
                 shipment.setStatus("Delivered");
                 shipment.setActualDelivery(OffsetDateTime.now());
+                
                 notes = "Shipment has been successfully delivered.";
             } else {
+            	//time logic should be here
                 shipment.setStatus("Out for Delivery");
                 notes = "Shipment is now out for final delivery.";
             }
@@ -141,39 +143,5 @@ public class ShipmentServiceImp implements ShipmentService{
 
         return ShipmentMapper.toDto(shipment);
     }
-    
-    
-//    @Override
-//    @Transactional // Ensures these steps happen together or not at all.
-//    public void processNewShipment(Shipment newShipment) {
-//        // 1. Get the source pincode from the shipment data.
-//        String sourcePincode = newShipment.getSourcePincode(); //I got problem here 
-//
-//        // 2. Delegate to LogisticCenterService to find the starting center ID.
-//        int sourceCenterId = logisticCenterService.getCenterFromPincode(sourcePincode);
-//
-//        // 3. Find the actual LogisticCenter object.
-//        // In a real app, you'd fetch this from the database. For this system, we can assume it exists.
-//        // For now, let's just log this information.
-//        // NOTE: You would need a method in LogisticCenterService to get a center by its ID.
-//        // LogisticCenter sourceCenter = logisticCenterService.getCenterById((long) sourceCenterId);
-//        
-//        // 4. Update the shipment's *current location* to this starting center.
-//        // THIS IS A CRITICAL STEP. The shipment is now officially "at" a location.
-//        // newShipment.setCurrentCenter(sourceCenter);
-//        // Note: This step requires that your Shipment entity can have its currentCenter updated and saved.
-//
-//        // 5. Create the VERY FIRST tracking history record.
-//        TrackingHistory initialRecord = new TrackingHistory();
-//        initialRecord.setShipment(newShipment);
-//        initialRecord.setStatus("PROCESSING");
-//        initialRecord.setStatusCode("PROCESSING");
-//        initialRecord.setNotes("Shipment created and registered at origin center.");
-//        // initialRecord.setCenter(sourceCenter); // Set the center where the event happened.
-//        
-//        // The @PrePersist in TrackingHistory will handle the timestamps.
-//
-//        trackingHistoryRepository.save(initialRecord);
-//        // shipmentRepository.save(newShipment); // Save the shipment again to update its currentCenter
-//    }
+
 }

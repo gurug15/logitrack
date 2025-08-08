@@ -1,6 +1,9 @@
 package com.project.logitrack.Entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 
 import java.time.OffsetDateTime;
@@ -16,8 +19,10 @@ public class TrackingHistory {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank(message = "Status is required")
     private String status;
 
+    @Size(max = 500, message = "Notes cannot exceed 500 characters")
     private String notes;
 
     private OffsetDateTime timestamp;
@@ -27,6 +32,7 @@ public class TrackingHistory {
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "shipment_id", nullable = false)
+    @NotNull(message = "Shipment is required")
     private Shipment shipment;
 
     @ManyToOne
