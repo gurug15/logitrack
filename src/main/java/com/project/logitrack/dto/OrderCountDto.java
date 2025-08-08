@@ -12,5 +12,5 @@ public class OrderCountDto {
 	private Long totalOrders;
 	private Long pendingOrders;
 	private Long  processingOrders;
-	private Long deleviredOrders;
+	private Long deliveredOrders;
 }

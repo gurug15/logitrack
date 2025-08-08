@@ -30,7 +30,7 @@ public interface OrderRepository extends JpaRepository<Order,Long>{
     	    SELECT 
     	      COUNT(*) as total_orders,
     	      COUNT(*) FILTER (WHERE status = 'pending') as pending_orders,
-    	      COUNT(*) FILTER (WHERE status = 'processing') as processing_orders,
+    	      COUNT(*) FILTER (WHERE status = 'processed') as processing_orders,
     	      COUNT(*) FILTER (WHERE status = 'delivered') as delivered_orders
     	    FROM orders
     	    WHERE userid = :userId

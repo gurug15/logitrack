@@ -42,7 +42,7 @@ public class SecurityConfig {
             .cors(Customizer.withDefaults()) // Use the bean for CORS config
             .csrf(customizer -> customizer.disable()) // Disable CSRF for stateless API
             .authorizeHttpRequests(req -> req
-                .requestMatchers("/login","/signup").permitAll() // Assuming your login controller is here
+                .requestMatchers("/login","/signup","/shipments/track**").permitAll() // Assuming your login controller is here
                 .requestMatchers(HttpMethod.GET, "/logistic-centers").permitAll()
                 .requestMatchers("/logistic-centers/**").hasAuthority("admin")
                 .requestMatchers("/orders/admin/**").hasAuthority("admin")

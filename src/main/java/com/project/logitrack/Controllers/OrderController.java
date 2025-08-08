@@ -46,8 +46,9 @@ public class OrderController {
 	}
 
     @GetMapping
-    public ResponseEntity<List<OrderDto>> getOrders() {  
-        List<Order> orders = orderService.getAllOrders(); // or apply filters as you have
+    public ResponseEntity<List<OrderDto>> getOrders(@AuthenticationPrincipal UserPrinciple currentUser) {  
+    	User currUser = currentUser.getUser();
+        List<Order> orders = orderService.userOrders(currUser); 
         List<OrderDto> dtoList = OrderMapper.toOrderDtoList(orders);
         return ResponseEntity.ok(dtoList);
     }

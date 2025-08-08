@@ -161,6 +161,12 @@ public class OrderServiceImpl implements OrderService{
         // Save the new shipment. The TrackingHistory will be saved automatically due to the Cascade setting on the Shipment entity.
         return shipmentRepository.save(newShipment);
     }
+
+	@Override
+	public List<Order> userOrders(User user) {
+		 List<Order> orders = orderRepository.findOrdersByUserId(user.getId());
+		return orders;
+	}
     
     
 }
