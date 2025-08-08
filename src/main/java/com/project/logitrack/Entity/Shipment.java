@@ -9,6 +9,7 @@ import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 import java.math.BigDecimal;
+import java.sql.Date;
 import java.time.OffsetDateTime;
 import java.util.List;
 
@@ -37,11 +38,11 @@ public class Shipment {
 	    @Size(max = 255, message = "Dimensions must be less than 255 characters")
 	    private String dimensions;
 
-	    @NotNull(message = "Expected delivery date is required")
+//	    @NotNull(message = "Expected delivery date is required")
 	    @Future(message = "Expected delivery date must be in the future")
 	    private OffsetDateTime expectedDelivery;
 
-	    @FutureOrPresent(message = "Actual delivery date cannot be in the past")
+//	    @FutureOrPresent(message = "Actual delivery date cannot be in the past")
 	    private OffsetDateTime actualDelivery;
 
 	    @Column(name = "createdat", updatable = false)

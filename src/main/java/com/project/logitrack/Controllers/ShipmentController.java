@@ -13,12 +13,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.project.logitrack.Entity.Shipment;
 import com.project.logitrack.Entity.UserPrinciple;
 import com.project.logitrack.Mappers.ShipmentMapper;
 import com.project.logitrack.dto.ShipmentDto;
+import com.project.logitrack.dto.ShipmentTrackingDto;
 import com.project.logitrack.dto.UpdateShipmentRequestDto;
 import com.project.logitrack.dto.UpdateStatusDto;
 import com.project.logitrack.service.ShipmentService;
@@ -29,17 +31,16 @@ public class ShipmentController {
 	@Autowired
     private ShipmentService shipmentService;
 
-    @PostMapping  //didn't try
-    public ResponseEntity<ShipmentDto> createShipment(@RequestBody Shipment shipment) {
-        Shipment createdShipment = shipmentService.createShipment(shipment);
-        ShipmentDto created= ShipmentMapper.toDto(createdShipment);
-        return ResponseEntity.ok(created);
-    }
 
-    @GetMapping("/{trackingId}")  //working
-    public ResponseEntity<ShipmentDto> getShipmentByTrackingId(@PathVariable("trackingId") String trackingId) {
+    @GetMapping("/track")
+    public ResponseEntity<ShipmentTrackingDto> getShipmentByTrackingId(
+            // Change the annotation from @PathVariable to @RequestParam
+            @RequestParam String trackingId) {
+        
         Optional<Shipment> shipmentOpt = shipmentService.getShipmentByTrackingId(trackingId);
-        return shipmentOpt.map(ShipmentMapper::toDto).map(ResponseEntity::ok)
+        return shipmentOpt
+                .map(ShipmentMapper::toShipmentTrackingDto)
+                .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 

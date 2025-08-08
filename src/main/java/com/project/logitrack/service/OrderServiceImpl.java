@@ -1,6 +1,8 @@
 package com.project.logitrack.service;
 
 import java.math.BigDecimal;
+import java.sql.Date;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.util.List;
@@ -136,7 +138,6 @@ public class OrderServiceImpl implements OrderService{
         newShipment.setSourceCenter(order.getUser().getLogisticCenterId());
         newShipment.setCurrentCenter(order.getUser().getLogisticCenterId());
         newShipment.setDestCenter(destinationCenter);
-        newShipment.setExpectedDelivery(order.getExpectedDeliveryDate() != null ? order.getExpectedDeliveryDate().atStartOfDay().atOffset(OffsetDateTime.now().getOffset()) : null);
         
         // Calculate total weight from order items (or use a placeholder)
         BigDecimal totalWeight = order.getOrderItems().stream()
@@ -144,7 +145,7 @@ public class OrderServiceImpl implements OrderService{
                                     .reduce(BigDecimal.ZERO, BigDecimal::add);
         newShipment.setWeight(totalWeight.max(new BigDecimal("0.5"))); // Ensure a minimum weight
         newShipment.setDimensions("Standard Box");
-
+        newShipment.setExpectedDelivery(order.getExpectedDeliveryDate() != null ? order.getExpectedDeliveryDate().atStartOfDay().atOffset(OffsetDateTime.now().getOffset()) : null);
         // 5. Update the Order's status
         order.setStatus("Processed");
         orderRepository.save(order);
