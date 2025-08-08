@@ -31,7 +31,7 @@ public class Shipment {
 	    private String trackingId;
 
 	    @NotBlank(message = "Status is required")
-	    @Pattern(regexp = "pending|shipped|in-transit|delivered|cancelled", message = "Invalid shipment status")
+//	    @Pattern(regexp = "pending|shipped|in-transit|delivered|cancelled|", message = "Invalid shipment status")
 	    private String status;
 
 	    @NotNull(message = "Weight is required")
@@ -43,7 +43,7 @@ public class Shipment {
 	    private String dimensions;
 
 //	    @NotNull(message = "Expected delivery date is required")
-	    @Future(message = "Expected delivery date must be in the future")
+//	    @Future(message = "Expected delivery date must be in the future")
 	    private OffsetDateTime expectedDelivery;
 
 //	    @FutureOrPresent(message = "Actual delivery date cannot be in the past")

@@ -94,6 +94,9 @@ public class ShipmentServiceImp implements ShipmentService{
         if ("Out for Delivery".equalsIgnoreCase(shipment.getStatus()) && "Delivered".equalsIgnoreCase(requestedStatus)) {
             shipment.setStatus("Delivered");
             shipment.setActualDelivery(OffsetDateTime.now());
+            
+            shipment.getOrder().setDeliveredDate(LocalDate.now());
+            shipment.getOrder().setStatus(requestedStatus);
             notes = "Shipment has been successfully delivered.";
         }
         // PRIORITY 2: If shipment is at destination center and needs to go out for delivery
