@@ -1,10 +1,12 @@
 package com.project.logitrack.Entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 import lombok.*;
@@ -29,17 +31,19 @@ public class Shipment {
 	    private String trackingId;
 
 	    @NotBlank(message = "Status is required")
+//	    @Pattern(regexp = "pending|shipped|in-transit|delivered|cancelled|", message = "Invalid shipment status")
 	    private String status;
 
 	    @NotNull(message = "Weight is required")
 	    @Positive(message = "Weight must be positive")
+	    @Digits(integer = 10, fraction = 2, message = "Weight must have up to 2 decimal places")
 	    private BigDecimal weight;
 
 	    @Size(max = 255, message = "Dimensions must be less than 255 characters")
 	    private String dimensions;
 
 //	    @NotNull(message = "Expected delivery date is required")
-	    @Future(message = "Expected delivery date must be in the future")
+//	    @Future(message = "Expected delivery date must be in the future")
 	    private OffsetDateTime expectedDelivery;
 
 //	    @FutureOrPresent(message = "Actual delivery date cannot be in the past")

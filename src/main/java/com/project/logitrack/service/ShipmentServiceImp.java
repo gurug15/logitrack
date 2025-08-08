@@ -67,86 +67,6 @@ public class ShipmentServiceImp implements ShipmentService{
         return shipmentRepository.findByCurrentCenterId(centerId);
     }
     
-  
-//      
-//    @Override
-//    @Transactional
-//    public ShipmentDto updateShipmentBySubAdmin(Long shipmentId, UpdateShipmentRequestDto request, UserPrinciple currentUser) {
-//        User subAdmin = currentUser.getUser();
-//        Long subAdminCenterId = subAdmin.getLogisticCenterId().getId();
-//
-//        Shipment shipment = shipmentRepository.findById(shipmentId)
-//                .orElseThrow(() -> new RuntimeException("Shipment not found with ID: " + shipmentId));
-//
-//        // Security Check
-//        if (shipment.getCurrentCenter() == null || !shipment.getCurrentCenter().getId().equals(subAdminCenterId)) {
-//            throw new AccessDeniedException("Access Denied: You can only update shipments at your own center.");
-//        }
-//        
-//        if ("Out for Delivery".equalsIgnoreCase(shipment.getStatus()) || "Delivered".equalsIgnoreCase(shipment.getStatus())) {
-//            throw new IllegalStateException("Shipment is already in a final delivery state and cannot be updated further.");
-//        }
-//        String requestedStatus = request.getStatus();
-//        String notes;
-//
-//        // --- NEW, SMARTER AUTOMATED LOGIC ---
-//
-//        // First, check if the shipment is already at its final destination
-//        if (shipment.getCurrentCenter().getId().equals(shipment.getDestCenter().getId())) {
-//            // If it's at the final center, the only valid next step is delivery.
-//            if ("Delivered".equalsIgnoreCase(requestedStatus)) {
-//                shipment.setStatus("Delivered");
-//                shipment.setActualDelivery(OffsetDateTime.now());
-//                notes = "Shipment has been successfully delivered.";
-//            } else {
-//                shipment.setStatus("Out for Delivery");
-//                notes = "Shipment is now out for final delivery.";
-//            }
-//        }
-//        // If the shipment is NOT at its final destination, and the user wants to dispatch it...
-//        else if ("In Transit".equalsIgnoreCase(requestedStatus)) {
-//            int sourceId = shipment.getSourceCenter().getId().intValue();
-//            int destId = shipment.getDestCenter().getId().intValue();
-//            
-//            // 1. Get the route from your friend's service
-//            List<Integer> route = logisticCenterService.findRoute(sourceId, destId);
-//            int currentIndexInRoute = route.indexOf(subAdminCenterId.intValue());
-//
-//            // 2. Determine the next stop
-//            if (currentIndexInRoute != -1 && currentIndexInRoute + 1 < route.size()) {
-//                Long nextCenterId = (long) route.get(currentIndexInRoute + 1);
-//                LogisticCenter nextCenter = logisticCenterRepository.findById(nextCenterId)
-//                        .orElseThrow(() -> new RuntimeException("Next center in route not found: " + nextCenterId));
-//                
-//                // 3. Update the shipment's current location - THIS IS THE KEY FIX
-//                shipment.setCurrentCenter(nextCenter);
-//                notes = "Status: In Transit. Dispatched from " + subAdmin.getLogisticCenterId().getName() + " and forwarded to " + nextCenter.getName() + ".";
-//                shipment.setStatus("In Transit");
-//
-//            } else {
-//                // This case should rarely happen, but it's a safe fallback.
-//                notes = "Status updated to '" + requestedStatus + "'. Could not determine next center in route.";
-//                shipment.setStatus(requestedStatus);
-//            }
-//        } else {
-//            // For any other manual status update (e.g., "Delayed")
-//            shipment.setStatus(requestedStatus);
-//            notes = "Status manually updated to '" + requestedStatus + "'";
-//        }
-//        
-//        // Create the tracking history record
-//        TrackingHistory historyRecord = new TrackingHistory();
-//        historyRecord.setShipment(shipment);
-//        historyRecord.setStatus(shipment.getStatus()); 
-//        historyRecord.setNotes(notes);
-//        historyRecord.setCenter(subAdmin.getLogisticCenterId()); 
-//        historyRecord.setUpdatedByUser(subAdmin);
-//        
-//        trackingHistoryRepository.save(historyRecord);
-//
-//        return ShipmentMapper.toDto(shipment);
-//    }
-//    
     
     @Override
     @Transactional
@@ -174,6 +94,9 @@ public class ShipmentServiceImp implements ShipmentService{
         if ("Out for Delivery".equalsIgnoreCase(shipment.getStatus()) && "Delivered".equalsIgnoreCase(requestedStatus)) {
             shipment.setStatus("Delivered");
             shipment.setActualDelivery(OffsetDateTime.now());
+            
+            shipment.getOrder().setDeliveredDate(LocalDate.now());
+            shipment.getOrder().setStatus(requestedStatus);
             notes = "Shipment has been successfully delivered.";
         }
         // PRIORITY 2: If shipment is at destination center and needs to go out for delivery
@@ -227,5 +150,4 @@ public class ShipmentServiceImp implements ShipmentService{
 
         return ShipmentMapper.toDto(shipment);
     }
-   
-}
+   }

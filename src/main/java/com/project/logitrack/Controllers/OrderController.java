@@ -28,6 +28,8 @@ import com.project.logitrack.repositories.ItemRepository;
 import com.project.logitrack.service.OrderService;
 import com.project.logitrack.service.UserService;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/orders")
 public class OrderController {
@@ -37,7 +39,7 @@ public class OrderController {
 	
 
 	@PostMapping
-	public ResponseEntity<Order> createOrder(@RequestBody OrderFormDto orderFormdto, @AuthenticationPrincipal UserPrinciple currentUser) {
+	public ResponseEntity<Order> createOrder(@RequestBody @Valid OrderFormDto orderFormdto, @AuthenticationPrincipal UserPrinciple currentUser) {
 		User user = currentUser.getUser(); 
 	    Order savedOrder = orderService.createOrder(orderFormdto, user);
 	    return ResponseEntity.ok(savedOrder);
