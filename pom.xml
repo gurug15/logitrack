@@ -74,6 +74,7 @@
 			<artifactId>spring-security-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+		
 		<!-- https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt-api -->
 	<dependency>
    		 <groupId>io.jsonwebtoken</groupId>
@@ -93,6 +94,12 @@
     <scope>runtime</scope>
 </dependency>
 <!-- https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt-jackson -->
+<!--<dependency>
+		    <groupId>io.github.cdimascio</groupId>
+		    <artifactId>dotenv-java</artifactId>
+		    <version>3.0.0</version>
+		</dependency>-->
+
 <dependency>
     <groupId>io.jsonwebtoken</groupId>
     <artifactId>jjwt-jackson</artifactId>
