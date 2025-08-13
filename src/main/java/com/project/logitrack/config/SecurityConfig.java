@@ -3,6 +3,7 @@ package com.project.logitrack.config;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -28,6 +29,8 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @EnableMethodSecurity
 public class SecurityConfig {
 	
+	 @Value("${cors.allowed.origin}")
+	 private String allowedOrigin;
 	
 	@Autowired
 	private UserDetailsService userdetailService;
@@ -67,7 +70,7 @@ public class SecurityConfig {
 	@Bean
     public CorsConfigurationSource corsConfigurationSource() {
 		CorsConfiguration config = new CorsConfiguration();
-	    config.setAllowedOrigins(List.of("http://localhost:5173")); // Replace with your frontend origin
+	    config.setAllowedOrigins(List.of(allowedOrigin)); // Replace with your frontend origin
 	    config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
 	    config.setAllowedHeaders(List.of("*"));
 	    config.setAllowCredentials(true);
